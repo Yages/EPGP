@@ -1,0 +1,13 @@
+{
+    "name": "dh/epgp",
+    "description": "A Web based system for managing EPGP for World of Warcraft Classic.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lucas Bradd",
+            "email": "lucas@bradd.com.au"
+        }
+    ],
+    "require": {}
+}
