@@ -9,5 +9,10 @@
             "email": "lucas@bradd.com.au"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=7.2",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-json": "*"
+    }
 }
