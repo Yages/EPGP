@@ -1,0 +1,73 @@
+.druid {
+  color: #FF7D0A;
+}
+
+.hunter {
+  color: #A9D271;
+}
+
+.mage {
+  color: #40C7EB;
+}
+
+.priest {
+  color: #FFFFFF;
+}
+
+.rogue {
+  color: #FFF569;
+}
+
+.shaman {
+  color: #0070DE;
+}
+
+.warlock {
+  color: #8787ED;
+}
+
+.warrior {
+  color: #C79C6E;
+}
+
+.druid-bg {
+  background: #FF7D0A;
+}
+
+.hunter-bg {
+  background: #A9D271;
+}
+
+.mage-bg {
+  background: #40C7EB;
+}
+
+.priest-bg {
+  background: #FFFFFF;
+}
+
+.rogue-bg {
+  background: #FFF569;
+}
+
+.shaman-bg {
+  background: #0070DE;
+}
+
+.warlock-bg {
+  background: #8787ED;
+}
+
+.warrior-bg {
+  background: #C79C6E;
+}
+
+.login-container {
+  height: 80vh;
+}
+
+.login-container .form-signin .form-control {
+  margin-top: 5px;
+}
+
+/*# sourceMappingURL=styles.css.map */

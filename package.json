@@ -4,16 +4,19 @@
   "description": "A Web based system for managing EPGP for World of Warcraft Classic.",
   "main": "public/index.php",
   "dependencies": {
-    "node-sass": "^4.14.1"
+    "node-sass": "^4.14.1",
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "clean-css-cli": "^4.3.0",
     "node-sass": "^4.14.1"
   },
   "scripts": {
-    "compile-styles": "node-sass --output-style expanded --source-map true --source-map-contents true --precision 6 assets/SCSS/main.scss dist/css/styles.css",
-    "css-minify": "cleancss --level 1 --format breaksWith=lf --source-map --source-map-inline-sources --output dist/css/styles.min.css dist/css/styles.css",
-    "build": "npm run compile-styles && npm run css-minify"
+    "clean": "rimraf public/dist",
+    "compile-styles": "node-sass --output-style expanded --source-map true --source-map-contents true --precision 6 assets/SCSS/main.scss public/dist/css/styles.css",
+    "css-minify": "cleancss --level 1 --format breaksWith=lf --source-map --source-map-inline-sources --output public/dist/css/styles.min.css public/dist/css/styles.css",
+    "copy-js-modules": "cp -R assets/JS public/dist/",
+    "build": "npm run compile-styles && npm run css-minify && npm run copy-js-modules"
   },
   "repository": {
     "type": "git",

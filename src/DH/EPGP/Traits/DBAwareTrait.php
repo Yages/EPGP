@@ -5,6 +5,7 @@ namespace DH\EPGP\Traits;
 
 
 use PDO;
+use PDOException;
 
 /**
  * Class DB
@@ -14,10 +15,10 @@ use PDO;
 trait DBAwareTrait
 {
     /** @var PDO PDO Instance */
-    protected PDO $pdo;
+    private ?PDO $pdo;
 
     /** @var array Configuration data array */
-    private array $config;
+    private ?array $config;
 
     /**
      * DB constructor.
@@ -27,9 +28,10 @@ trait DBAwareTrait
         if ($this->loadConfig()) {
             try {
                 $this->pdo = new PDO($this->config['dsn'], $this->config['user'], $this->config['pass']);
-            } catch(\PDOException $e) {
+            } catch(PDOException $e) {
                 error_log('Database connection error: '.$e->getMessage());
                 die('Unable to connect to database.');
+
             }
         } else {
             error_log('Unable to load site configuration, check ini file exists.');
@@ -62,7 +64,7 @@ trait DBAwareTrait
      */
     private function loadConfig() : bool
     {
-        $path = dirname(__FILE__, 4) . '/epgp-db.ini';
+        $path = dirname(__FILE__, 5) . '/db-epgp.ini';
         $this->config = parse_ini_file($path);
 
         return (!empty($this->config));

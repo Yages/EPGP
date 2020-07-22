@@ -1,0 +1,56 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">DH & Syz EPGP</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            {% if admin %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="raidDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Raids
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="raidDropdown">
+                        <a class="dropdown-item" href="#">Create Raid</a>
+                        <a class="dropdown-item" href="#">Manage Raid</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="characterDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Characters
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="characterDropdown">
+                        <a class="dropdown-item" href="#">Add Character</a>
+                        <a class="dropdown-item" href="#">Manage Characters</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="locationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Characters
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="locationDropdown">
+                        <a class="dropdown-item" href="#">Add Location</a>
+                        <a class="dropdown-item" href="#">Manage Locations</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">EPGP Decay</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Admin</a>
+                </li>
+            {% endif %}
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            {% if admin %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-sign-in-alt"></i> Login</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

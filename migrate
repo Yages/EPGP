@@ -1,0 +1,33 @@
+#!/usr/bin/php
+<?php
+
+namespace DH\EPGP;
+
+use DH\EPGP\Controllers\AuthController;
+use DH\EPGP\Views\TotalsView;
+
+
+date_default_timezone_set('Australia/Melbourne');
+
+session_start();
+
+require_once('vendor/autoload.php');
+require_once('src/autoload.php');
+
+if (php_sapi_name() === 'cli') {
+    if ($argc !== 2) {
+        echo PHP_EOL . "ERROR: Requires a migration name to process to be passed." . PHP_EOL . PHP_EOL;
+        echo "Usage: migrate <migration_name>" . PHP_EOL . PHP_EOL;
+    } else {
+        $migrationName = $argv[1];
+        $migrationPath = getcwd() . "/src/DH/EPGP/Migrations/{$migrationName}.php";
+        if (file_exists($migrationPath)) {
+            $migrationName = "DH\EPGP\Migrations\\".$migrationName;
+            $migration = new $migrationName();
+            $migration->migrate();
+        } else {
+            echo PHP_EOL . "ERROR: Invalid migration name: '$migrationName' does not exist." . PHP_EOL . PHP_EOL;
+            echo "Usage: migrate <migration_name>" . PHP_EOL . PHP_EOL;
+        }
+    }
+}

@@ -13,6 +13,7 @@
         "php": ">=7.2",
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "twig/twig": "^3.0"
     }
 }
