@@ -53,7 +53,9 @@ trait DBAwareTrait
      */
     public function pdo() : ?PDO
     {
-        if (empty($this->pdo)) return null;
+        if (empty($this->pdo)) {
+            $this->connect();
+        }
 
         return $this->pdo;
     }

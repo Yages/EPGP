@@ -2,6 +2,11 @@
   height: 80vh;
 
   .form-signin {
+    width: 100%;
+
+    @media (min-width: $screen-sm-max) {
+      width: 500px;
+    }
     .form-control {
       margin-top: 5px;
     }

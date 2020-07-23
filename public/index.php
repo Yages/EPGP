@@ -3,8 +3,7 @@
 namespace DH\EPGP;
 
 use DH\EPGP\Controllers\AuthController;
-use DH\EPGP\Views\TotalsView;
-
+use DH\EPGP\Controllers\TotalsController;
 
 date_default_timezone_set('Australia/Melbourne');
 
@@ -13,26 +12,32 @@ session_start();
 require_once('../vendor/autoload.php');
 require_once('../src/autoload.php');
 
-$auth = new AuthController();
+$router = new Router();
+$authController = new AuthController();
+$totalsController = new TotalsController();
 
 // Already logged in via session
-if ($auth->checkSession()) {
-
+if ($authController->checkSession()) {
+    $user = $authController->getLoggedInUser();
+    $router->get('/', function() use ($totalsController, $user) {
+        $totalsController->list($user);
+    })->get('/logout', function() use ($authController) {
+        $authController->logout();
+        header('Location: /');
+    });
 } else {
-    $view = new TotalsView();
-    $view->view();
-
-
-//    $loginView = new LoginView();
-//
-//    if (empty($_POST)) {
-//        $loginView->view();
-//    } else {
-//        $username = trim($_POST['username'] ?? 'default');
-//        $password = trim($_POST['password'] ?? 'default');
-//        if ($auth->check($username, $password)) {
-//            $auth->login($username);
-//            header('Location: /');
-//        } else $loginView->setError()->view();
-//    }
+    $router->get('/', function() use ($totalsController) {
+        $totalsController->list();
+    })->get('/login', function() use ($authController) {
+        $authController->show();
+    })->post('/login', function() use ($authController) {
+        $username = trim($_POST['username'] ?? 'default');
+        $password = trim($_POST['password'] ?? 'default');
+        if ($authController->check($username, $password)) {
+            $authController->login($username);
+            header('Location: /');
+        } else $authController->show(true);
+    });
 }
+
+$router->dispatch();

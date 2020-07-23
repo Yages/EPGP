@@ -4,6 +4,11 @@
 namespace DH\EPGP\Views;
 
 
+use DH\EPGP\Models\UserModel;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+
 /**
  * Class TotalsView
  * @package Divine Heresy\EPGP\Views
@@ -11,17 +16,25 @@ namespace DH\EPGP\Views;
  */
 class TotalsView extends AbstractView
 {
+    private ?UserModel $user;
+
     /**
      * TotalsView constructor.
+     * @param UserModel|null $user
      */
-    public function __construct()
+    public function __construct(?UserModel $user = null)
     {
         parent::__construct();
         $this->template = 'totals.twig';
-        $this->characters = 'Test';
+        $this->user = $user;
     }
 
-    public function view()
+    /**
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function view() : void
     {
         $dummyData = [
             [
@@ -555,6 +568,7 @@ class TotalsView extends AbstractView
                 "pr" => 0.24,
             ],
         ];
-        $this->twig->display($this->template, ['characters' => $dummyData]);
+        $this->twig->display($this->template, ['characters' => $dummyData, 'user' => $this->user]);
+
     }
 }

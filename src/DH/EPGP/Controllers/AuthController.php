@@ -3,8 +3,13 @@
 
 namespace DH\EPGP\Controllers;
 
+use DH\EPGP\Models\UserModel;
+use DH\EPGP\Views\LoginView;
 use PDO;
 use PDOException;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 /**
  * Class AuthController
@@ -59,6 +64,21 @@ class AuthController extends Controller
     }
 
     /**
+     * Gets the user model for the currently logged in user.
+     * @return UserModel|null
+     */
+    public function getLoggedInUser() : ?UserModel
+    {
+        $user = null;
+
+        if (!empty($_SESSION['username'])) {
+            $user = new UserModel($_SESSION['username']);
+        }
+
+        return $user;
+    }
+
+    /**
      * Checks that a user exists in the database and that their password as
      * provided is valid using PHP's password_* functions.
      * @param string $username The username provided.
@@ -70,9 +90,9 @@ class AuthController extends Controller
         $return = false;
         try {
             $query = "SELECT password
-                        FROM users
+                        FROM Administrators 
                        WHERE username = :username";
-            $stmt = $this->pdo->prepare($query);
+            $stmt = $this->pdo()->prepare($query);
             $stmt->execute([':username' => $username]);
             $results = $stmt->fetch(PDO::FETCH_NUM);
 
@@ -112,6 +132,19 @@ class AuthController extends Controller
         session_destroy();
     }
 
-
-
+    /**
+     * Shows the Login Page
+     * @param bool $error
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function show(bool $error = false)
+    {
+        $view = new LoginView();
+        if ($error) {
+            $view->setError();
+        }
+        $view->view();
+    }
 }

@@ -66,6 +66,16 @@
   height: 80vh;
 }
 
+.login-container .form-signin {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .login-container .form-signin {
+    width: 500px;
+  }
+}
+
 .login-container .form-signin .form-control {
   margin-top: 5px;
 }
