@@ -18,38 +18,26 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/">Totals</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="raidDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Raids
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="raidDropdown">
-                            <a class="dropdown-item" href="/raids/create">Create Raid</a>
-                            <a class="dropdown-item" href="/raids/manage">Manage Raid</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="characterDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Characters
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="characterDropdown">
-                            <a class="dropdown-item" href="/characters/add">Add Character</a>
-                            <a class="dropdown-item" href="/characters/manage">Manage Characters</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="locationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Locations
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="locationDropdown">
-                            <a class="dropdown-item" href="/locations/add">Add Location</a>
-                            <a class="dropdown-item" href="/locations/manage">Manage Locations</a>
-                        </div>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/raids">Raids</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/epgp">EPGP Decay</a>
+                        <a class="nav-link" href="/characters">Characters</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/loot">Loot</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/epgp">EPGP</a>
                     </li>
                 {% endif  %}
                 {% if user.isAdmin %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/guilds">Guilds</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/locations">Locations</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin">Admin</a>
                     </li>

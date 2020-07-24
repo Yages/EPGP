@@ -16,8 +16,6 @@ use Twig\Error\SyntaxError;
  */
 class TotalsView extends AbstractView
 {
-    private ?UserModel $user;
-
     /**
      * @var array
      */
@@ -25,13 +23,11 @@ class TotalsView extends AbstractView
 
     /**
      * TotalsView constructor.
-     * @param UserModel|null $user
      */
-    public function __construct(?UserModel $user = null)
+    public function __construct()
     {
         parent::__construct();
         $this->template = 'totals.twig';
-        $this->user = $user;
     }
 
     /**
@@ -42,7 +38,6 @@ class TotalsView extends AbstractView
     public function view() : void
     {
         $this->twig->display($this->template, ['characters' => $this->characterData, 'user' => $this->user]);
-
     }
 
     /**

@@ -67,7 +67,7 @@ class AuthController extends Controller
      * Gets the user model for the currently logged in user.
      * @return UserModel|null
      */
-    public function getLoggedInUser() : ?UserModel
+    public static function getLoggedInUser() : ?UserModel
     {
         $user = null;
 

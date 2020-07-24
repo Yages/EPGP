@@ -76,7 +76,7 @@ class GuildModel extends AbstractModel
                 ':name' => $this->name,
                 ':logo' => $this->logo,
             ]);
-            $this->id = $this->pdo()->lastInsertId();
+            $this->id = (int) $this->pdo()->lastInsertId();
         } else {
             $query = "UPDATE Guild 
                          SET name = :name, 
@@ -114,11 +114,31 @@ class GuildModel extends AbstractModel
     }
 
     /**
-     * @return string
+     * @param string $name
+     * @return GuildModel
      */
-    public function getLogo() : string
+    public function setName(string $name) : GuildModel
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLogo() : ?string
     {
         return $this->logo;
+    }
+
+    /**
+     * @param string $logo
+     * @return GuildModel
+     */
+    public function setLogo(string $logo) : GuildModel
+    {
+        $this->logo = $logo;
+        return $this;
     }
 
     /**

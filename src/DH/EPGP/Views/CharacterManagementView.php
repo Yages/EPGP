@@ -11,10 +11,13 @@ use Twig\Error\SyntaxError;
 class CharacterManagementView extends AbstractView
 {
     /** @var array */
-    private $characterData;
+    private array $characterData;
 
     /** @var array */
-    private $guildData;
+    private array $guildData;
+
+    /** @var bool */
+    private $inactive = false;
 
     /**
      * CharacterManagementView constructor.
@@ -43,6 +46,11 @@ class CharacterManagementView extends AbstractView
         $this->guildData = $guildData;
     }
 
+    public function setInactive(bool $inactive)
+    {
+        $this->inactive = $inactive;
+    }
+
     /**
      * @throws LoaderError
      * @throws RuntimeError
@@ -55,8 +63,12 @@ class CharacterManagementView extends AbstractView
             [
                 'characters' => $this->characterData,
                 'guilds' => $this->guildData,
+                'viewInactive' => $this->inactive,
+                'user' => $this->user,
             ]
         );
     }
+
+
 
 }

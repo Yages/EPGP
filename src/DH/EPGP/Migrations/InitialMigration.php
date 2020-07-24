@@ -12,7 +12,7 @@ class InitialMigration extends Migration
 {
     /**
      * Performs the migration.
-     * @return bool
+     * @return void
      */
     public function migrate()
     {
@@ -38,6 +38,8 @@ class InitialMigration extends Migration
         }
         $pass = password_hash('xelzenov', PASSWORD_DEFAULT);
         $this->pdo()->exec("INSERT INTO Administrators (username, password, role, date_created, date_updated) VALUES ('xelzenov', '$pass', 3, NOW(), NOW())");
+        $pass = password_hash('carnifexus', PASSWORD_DEFAULT);
+        $this->pdo()->exec("INSERT INTO Administrators (username, password, role, date_created, date_updated) VALUES ('carnifexus', '$pass', 3, NOW(), NOW())");
 
         // Create Guild Table
         $this->pdo()->exec('DROP TABLE IF EXISTS Guild');

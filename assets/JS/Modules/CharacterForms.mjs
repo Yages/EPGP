@@ -1,5 +1,4 @@
 export function init() {
-
     prepareCharacterEventListeners();
 }
 
@@ -10,7 +9,6 @@ const confirmModal = $('#character-confirm-modal');
 const confirmModalTitle = $('#character-confirm-modal-label');
 const confirmModalBody = confirmModal.find('.modal-body');
 const confirmButton = $('#character-confirm');
-const confirmCancelButton = $('#character-confirm-cancel');
 const saveButton = $('#character-save');
 
 
@@ -22,9 +20,23 @@ function prepareCharacterEventListeners() {
         function(event) {
             const character = event.currentTarget.dataset;
             confirmModalTitle.html('Confirm Deactivation');
-            confirmModalBody.html('<p>Are you sure you want to disable the character <b>' + character.name + '</b>?</p>');
+            confirmModalBody.html('<p>Are you sure you want to deactivate the character <b>' + character.name + '</b>?</p>');
             confirmButton.attr('data-character', JSON.stringify(character));
             confirmButton.attr('data-action', 'deactivate');
+            confirmModal.modal('show');
+        }
+    );
+
+    // Active Toggle
+    characterTable.on(
+        'click',
+        '.mark-character-active',
+        function(event) {
+            const character = event.currentTarget.dataset;
+            confirmModalTitle.html('Confirm Activation');
+            confirmModalBody.html('<p>Are you sure you want to activate the character <b>' + character.name + '</b>?</p>');
+            confirmButton.attr('data-character', JSON.stringify(character));
+            confirmButton.attr('data-action', 'activate');
             confirmModal.modal('show');
         }
     );
@@ -35,11 +47,9 @@ function prepareCharacterEventListeners() {
         const action = event.currentTarget.dataset.action;
         if (action === 'deactivate') {
             deactivateCharacter(characterData);
+        } else if (action === 'activate') {
+            activateCharacter(characterData);
         }
-    });
-
-    confirmCancelButton.on('click', function(event) {
-
     });
 
     // Edit Toggle
@@ -66,12 +76,16 @@ function prepareCharacterEventListeners() {
         if (action === 'edit') {
             const id = saveButton.attr('data-id');
             editCharacter(id, formData);
-        } else if (action === 'save') {
+        } else if (action === 'create') {
             createCharacter(formData);
         }
     });
 
-    editModal.on('hidden.bs.modal', clearCharacterForm());
+    $('#add-character').on('click', function(event) {
+        clearCharacterForm();
+        saveButton.attr('data-action', 'create');
+        editModal.modal('show');
+    });
 }
 
 /**
@@ -79,6 +93,7 @@ function prepareCharacterEventListeners() {
  */
 function clearCharacterForm() {
     editModalTitle.html('Add Character');
+
     $('#name').val('');
     $('#class').val([]);
     $('#role').val([]);
@@ -97,7 +112,9 @@ function deactivateCharacter(character) {
         },
         function (data) {
             if (data.success) {
-                $('.mark-character-inactive[data-id="' + character.id + '"]').closest('tr').hide();
+                let row = $('.mark-character-inactive[data-id="' + character.id + '"]').closest('tr');
+                let table = new $.fn.dataTable.Api('#character-management');
+                table.row(row).remove().draw();
                 confirmModal.modal('hide');
             } else {
                 confirmModal.modal('hide');
@@ -108,8 +125,56 @@ function deactivateCharacter(character) {
     );
 }
 
-function createCharacter(character) {
+/**
+ * Activates a character
+ * @param character
+ */
+function activateCharacter(character) {
+    $.post(
+        '/characters/activate',
+        {
+            "character_id": character.id
+        },
+        function (data) {
+            if (data.success) {
+                let row = $('.mark-character-active[data-id="' + character.id + '"]').closest('tr');
+                let table = new $.fn.dataTable.Api('#character-management');
+                table.row(row).remove().draw();
+                confirmModal.modal('hide');
+            } else {
+                confirmModal.modal('hide');
+                alert('Something went wrong, ' + character.name + ' has not been activated.');
+            }
+        },
+        'json'
+    );
+}
 
+function createCharacter(character) {
+    $.post(
+        '/characters/create',
+        {
+            "character": character
+        },
+        function (data) {
+            if (data.success) {
+                let newRow = '<tr>' +
+                    '  <td>' + data.character.name + '</td>' +
+                    '  <td class="' + data.character.class.toLowerCase() + '">' + data.character.class + '</td>' +
+                    '  <td>' + data.character.role + '</td>' +
+                    '  <td>' + data.character.guild + '</td>' +
+                    '  <td>' +
+                    '   <button data-name="' + data.character.name + '" data-id="' + data.character.id + '" type="button" data-toggle="tooltip" title="Mark ' + data.character.name + ' as Inactive" class="btn btn-sm btn-outline-danger mark-character-inactive"><i class="fas fa-user-slash"></i></button>' +
+                    '   <button data-id="' + data.character.id + '" data-character=\'' + JSON.stringify(data.character) + '\' type="button" data-toggle="tooltip" title="Edit ' + data.character.name + '\'s Details" class="btn btn-sm btn-outline-primary edit-character-details"><i class="fas fa-edit"></i></button>' +
+                    '  </td>' +
+                    '</tr>';
+                let table = new $.fn.dataTable.Api('#character-management');
+                table.row.add($(newRow)).draw();
+            } else alert('Something went wrong, ' + data.character.name + 'has not been saved.');
+            editModal.modal('hide');
+        },
+        'json'
+    );
 }
 
 function editCharacter(id, character) {
@@ -122,18 +187,17 @@ function editCharacter(id, character) {
         function (data) {
             if (data.success) {
                 let row = $('.edit-character-details[data-id="' + id + '"]').closest('tr');
-
-                let table = new $.fn.dataTable.Api('#character-management');
                 let newRow = '<tr>' +
                     '  <td>' + data.character.name + '</td>' +
                     '  <td class="' + data.character.class.toLowerCase() + '">' + data.character.class + '</td>' +
                     '  <td>' + data.character.role + '</td>' +
                     '  <td>' + data.character.guild + '</td>' +
                     '  <td>' +
-                    '   <button data-name="' + data.character.name + '" data-id="' + data.character.id + '" type="button" data-toggle="tooltip" title="Mark ' + data.character.name + ' as Inactive" class="btn btn-sm btn-danger mark-character-inactive"><i class="fas fa-user-slash"></i></button>' +
-                    '   <button data-id="' + data.character.id + '" data-character=\'' + JSON.stringify(data.character) + '\' type="button" data-toggle="tooltip" title="Edit ' + data.character.name + '\'s Details" class="btn btn-sm btn-success edit-character-details"><i class="fas fa-edit"></i></button>' +
+                    '   <button data-name="' + data.character.name + '" data-id="' + data.character.id + '" type="button" data-toggle="tooltip" title="Mark ' + data.character.name + ' as Inactive" class="btn btn-sm btn-outline-danger mark-character-inactive"><i class="fas fa-user-slash"></i></button>' +
+                    '   <button data-id="' + data.character.id + '" data-character=\'' + JSON.stringify(data.character) + '\' type="button" data-toggle="tooltip" title="Edit ' + data.character.name + '\'s Details" class="btn btn-sm btn-outline-success edit-character-details"><i class="fas fa-edit"></i></button>' +
                     '  </td>' +
                     '</tr>';
+                let table = new $.fn.dataTable.Api('#character-management');
                 table.row(row).remove();
                 table.row.add($(newRow)).draw();
             } else alert('Something went wrong, ' + data.character.name + 'has not been saved.');

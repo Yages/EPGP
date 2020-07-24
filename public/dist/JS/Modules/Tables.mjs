@@ -1,6 +1,7 @@
 export function init() {
     initDatatable('current-epgp-standings');
     initDatatable('character-management');
+    initDatatable('guild-management');
 }
 
 function initDatatable(id) {

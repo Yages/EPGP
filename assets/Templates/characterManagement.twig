@@ -4,7 +4,17 @@
 
 {% block content %}
     <div class="page-header">
-        <h1>Character Management</h1>
+        <h1>{% if viewInactive %}Inactive {% endif %}Character Management</h1>
+    </div>
+    <div class="row">
+        <div class="col my-4">
+            {% if viewInactive %}
+                <a href="/characters" class="btn btn-outline-success"><i class="fas fa-users"></i> View Active Characters</a>
+            {% else %}
+                <button id="add-character" type="button" role="button" class="btn btn-outline-primary"><i class="fas fa-user-plus"></i> Add Character</button>
+                <a href="/characters/inactive" class="btn btn-outline-danger"><i class="fas fa-users-slash"></i> View Inactive Characters</a>
+            {% endif %}
+        </div>
     </div>
     <table id="character-management" class="table table-striped text-light" style="width:100%;">
         <thead class="text-dark bg-light">
@@ -24,8 +34,12 @@
                     <td>{{ character.getRole }}</td>
                     <td>{{ character.getGuild }}</td>
                     <td>
-                        <button data-name="{{ character.getName }}" data-id="{{ character.getId }}" type="button" data-toggle="tooltip" title="Mark {{ character.getName|capitalize }} as Inactive" class="btn btn-sm btn-danger mark-character-inactive"><i class="fas fa-user-slash"></i></button>
-                        <button data-id="{{ character.getId }}" data-character="{{ character|json_encode(constant('JSON_HEX_APOS')) }}" type="button" data-toggle="tooltip" title="Edit {{ character.getName|capitalize }}'s Details" class="btn btn-sm btn-success edit-character-details"><i class="fas fa-edit"></i></button>
+                        {% if viewInactive %}
+                            <button data-name="{{ character.getName }}" data-id="{{ character.getId }}" type="button" data-toggle="tooltip" title="Mark {{ character.getName|capitalize }} as Active" class="btn btn-sm btn-outline-success mark-character-active"><i class="fas fa-user"></i></button>
+                        {% else %}
+                            <button data-name="{{ character.getName }}" data-id="{{ character.getId }}" type="button" data-toggle="tooltip" title="Mark {{ character.getName|capitalize }} as Inactive" class="btn btn-sm btn-outline-danger mark-character-inactive"><i class="fas fa-user-slash"></i></button>
+                        {% endif %}
+                        <button data-id="{{ character.getId }}" data-character="{{ character|json_encode(constant('JSON_HEX_APOS')) }}" type="button" data-toggle="tooltip" title="Edit {{ character.getName|capitalize }}'s Details" class="btn btn-sm btn-outline-primary edit-character-details"><i class="fas fa-edit"></i></button>
                     </td>
                 </tr>
             {% endfor %}
@@ -54,6 +68,7 @@
                                 <option value="Mage">Mage</option>
                                 <option value="Priest">Priest</option>
                                 <option value="Rogue">Rogue</option>
+                                <option value="Warlock">Warlock</option>
                                 <option value="Warrior">Warrior</option>
                             </select>
                         </div>

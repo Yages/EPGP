@@ -4,6 +4,7 @@ namespace DH\EPGP;
 
 use DH\EPGP\Controllers\AuthController;
 use DH\EPGP\Controllers\CharacterController;
+use DH\EPGP\Controllers\GuildController;
 use DH\EPGP\Controllers\TotalsController;
 
 date_default_timezone_set('Australia/Melbourne');
@@ -19,23 +20,37 @@ $totalsController = new TotalsController();
 
 // Already logged in via session
 if ($authController->checkSession()) {
-    $user = $authController->getLoggedInUser();
-    $router->get('/', function() use ($totalsController, $user) {
-        $totalsController->list($user);
+    $router->get('/', function() use ($totalsController) {
+        $totalsController->list();
     })->get('/logout', function() use ($authController) {
         $authController->logout();
         header('Location: /');
     });
 
-    $characterController = new CharacterController();
     // Character stuff
-    $router->get('/characters/manage', function() use ($characterController) {
+    $characterController = new CharacterController();
+    $router->get('/characters', function() use ($characterController) {
         $characterController->list();
+    })->get('/characters/inactive', function() use ($characterController) {
+        $characterController->list(true);
     });
     $router->post('/characters/deactivate', function() use ($characterController) {
         $characterController->deactivate();
+    })->post('/characters/activate', function() use ($characterController) {
+        $characterController->activate();
     })->post('/characters/edit', function() use ($characterController) {
         $characterController->edit();
+    })->post('/characters/create', function() use ($characterController) {
+        $characterController->create();
+    });
+
+    // Guild Stuff
+    $guildController = new GuildController();
+    $router->get('/guilds', function() use ($guildController) {
+        $guildController->list();
+    });
+    $router->post('/guilds/create', function() use ($guildController) {
+        $guildController->create();
     });
 
 } else {

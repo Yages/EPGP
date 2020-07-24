@@ -3,6 +3,8 @@
 
 namespace DH\EPGP\Views;
 
+use DH\EPGP\Controllers\AuthController;
+use DH\EPGP\Models\UserModel;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 
@@ -25,20 +27,19 @@ abstract class AbstractView
     /** @var Environment */
     protected Environment $twig;
 
-    /** @var bool */
-    protected bool $admin = false;
+    /** @var UserModel|null */
+    protected ?UserModel $user;
 
     /**
      * AbstractView constructor.
-     * @param bool $admin
      */
-    public function __construct(bool $admin = false)
+    public function __construct()
     {
-        $this->admin = $admin;
+        $this->user = AuthController::getLoggedInUser();
         $this->basePath = dirname(__FILE__, 5) . '/assets/Templates/';
         $this->loader = new FilesystemLoader($this->basePath);
         $this->twig = new Environment($this->loader);
-        $this->twig->addGlobal('admin', $this->admin);
+        $this->twig->addGlobal('admin', $this->user);
     }
 
     /**

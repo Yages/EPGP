@@ -25,7 +25,7 @@ class CharacterModel extends AbstractModel
     private string $guild;
     private DateTimeImmutable $created;
     private DateTime $updated;
-    private bool $active;
+    private bool $active = true;
 
     /**
      * CharacterModel constructor.
@@ -118,7 +118,10 @@ class CharacterModel extends AbstractModel
                 ':guildId' => $this->guildId,
                 ':active' => $active,
             ]);
-            $this->id = $this->pdo()->lastInsertId();
+            $this->id = (int) $this->pdo()->lastInsertId();
+
+            // get guild name
+            $this->guild = $this->pdo()->query("SELECT name FROM Guild WHERE id = {$this->getGuildId()}")->fetch()[0];
         } else {
             $query = "UPDATE Characters
                          SET name = :name,
@@ -151,6 +154,18 @@ class CharacterModel extends AbstractModel
     {
         if ($this->active) {
             $this->active = false;
+            return $this->save();
+        } else return false;
+    }
+
+    /**
+     * Activates a characer, only if they're already inactive.
+     * @return bool
+     */
+    public function activate()
+    {
+        if (!$this->active) {
+            $this->active = true;
             return $this->save();
         } else return false;
     }
