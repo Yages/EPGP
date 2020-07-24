@@ -1,6 +1,6 @@
 {% extends "main.twig" %}
 
-{% block title %}CurrentEPGP Standings{% endblock %}
+{% block title %}Current EPGP Standings{% endblock %}
 
 {% block content %}
     <div class="page-header">
@@ -22,14 +22,14 @@
         <tbody>
             {% for character in characters %}
                 <tr>
-                    <td>{{ character.name }}</td>
-                    <td class="{{ character.class|lower }}">{{ character.class }}</td>
-                    <td>{{ character.role }}</td>
-                    <td>{{ character.guild }}</td>
-                    <td>{{ character.lastRaid }}</td>
-                    <td>{{ character.ep }}</td>
-                    <td>{{ character.gp }}</td>
-                    <td class="font-weight-bold">{{ character.pr }}</td>
+                    <td>{{ character.getName }}</td>
+                    <td class="{{ character.getClass|lower }}">{{ character.getClass }}</td>
+                    <td>{{ character.getRole }}</td>
+                    <td>{{ character.getGuild }}</td>
+                    <td>TBA</td>
+                    <td>TBA</td>
+                    <td>TBA</td>
+                    <td class="font-weight-bold">TBA</td>
                 </tr>
             {% endfor %}
         </tbody>

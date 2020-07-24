@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace DH\EPGP\Models;
@@ -92,7 +92,7 @@ class UserModel extends AbstractModel
         $userData = $stmt->fetch();
 
         $this->username = $userData['username'];
-        $this->role = $userData['role'];
+        $this->role = (int) $userData['role'];
         try {
             $this->created = new DateTimeImmutable($userData['date_created']);
             $this->updated = new DateTime($userData['date_updated']);
@@ -103,6 +103,10 @@ class UserModel extends AbstractModel
         return true;
     }
 
+    /**
+     * Saves the User data to the database.
+     * @return bool
+     */
     public function save() : bool
     {
         if (empty($this->username) || empty($this->role)) {

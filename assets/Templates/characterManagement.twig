@@ -1,0 +1,103 @@
+{% extends "main.twig" %}
+
+{% block title %}Character Management{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Character Management</h1>
+    </div>
+    <table id="character-management" class="table table-striped text-light" style="width:100%;">
+        <thead class="text-dark bg-light">
+            <tr>
+                <th>Character</th>
+                <th>Class</th>
+                <th>Role</th>
+                <th>Guild</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for character in characters %}
+                <tr>
+                    <td>{{ character.getName }}</td>
+                    <td class="{{ character.getClass|lower }}">{{ character.getClass }}</td>
+                    <td>{{ character.getRole }}</td>
+                    <td>{{ character.getGuild }}</td>
+                    <td>
+                        <button data-name="{{ character.getName }}" data-id="{{ character.getId }}" type="button" data-toggle="tooltip" title="Mark {{ character.getName|capitalize }} as Inactive" class="btn btn-sm btn-danger mark-character-inactive"><i class="fas fa-user-slash"></i></button>
+                        <button data-id="{{ character.getId }}" data-character="{{ character|json_encode(constant('JSON_HEX_APOS')) }}" type="button" data-toggle="tooltip" title="Edit {{ character.getName|capitalize }}'s Details" class="btn btn-sm btn-success edit-character-details"><i class="fas fa-edit"></i></button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="modal fade" id="character-edit-modal" tabindex="-1" role="dialog" aria-labelledby="character-edit-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title" id="character-edit-modal-label">Add Character</h5>
+                    <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-dark">
+                    <form id="character-form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input id="name" name="name" type="text" class="form-control" placeholder="Character Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="class">Class</label>
+                            <select id="class" name="class" class="form-control">
+                                <option value="Druid">Druid</option>
+                                <option value="Hunter">Hunter</option>
+                                <option value="Mage">Mage</option>
+                                <option value="Priest">Priest</option>
+                                <option value="Rogue">Rogue</option>
+                                <option value="Warrior">Warrior</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Raid Role</label>
+                            <select id="role" name="role" class="form-control">
+                                <option value="Healer">Healer</option>
+                                <option value="Melee">Melee</option>
+                                <option value="Ranged">Ranged</option>
+                                <option value="Tank">Tank</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="guild">Guild</label>
+                            <select name="guild" id="guild" class="form-control">
+                                {% for guild in guilds %}
+                                    <option value="{{ guild.id }}">{{ guild.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-dark">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="character-save" type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="character-confirm-modal" tabindex="-1" role="dialog" aria-labelledby="character-confirm-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title" id="character-confirm-modal-label">Confirm Changes</h5>
+                    <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-dark"></div>
+                <div class="modal-footer bg-dark">
+                    <button id="character-confirm-cancel" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button id="character-confirm" type="button" class="btn btn-primary">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

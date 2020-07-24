@@ -23,7 +23,7 @@ class Controller
      * Converts stuff to JSON and outputs it.
      * @param array|string|object $content
      */
-    private function toJson($content)
+    protected function toJson($content)
     {
         header('Content-type: application/json');
         echo json_encode($content);

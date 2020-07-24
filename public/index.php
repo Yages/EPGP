@@ -3,6 +3,7 @@
 namespace DH\EPGP;
 
 use DH\EPGP\Controllers\AuthController;
+use DH\EPGP\Controllers\CharacterController;
 use DH\EPGP\Controllers\TotalsController;
 
 date_default_timezone_set('Australia/Melbourne');
@@ -25,10 +26,33 @@ if ($authController->checkSession()) {
         $authController->logout();
         header('Location: /');
     });
+
+    $characterController = new CharacterController();
+    // Character stuff
+    $router->get('/characters/manage', function() use ($characterController) {
+        $characterController->list();
+    });
+    $router->post('/characters/deactivate', function() use ($characterController) {
+        $characterController->deactivate();
+    })->post('/characters/edit', function() use ($characterController) {
+        $characterController->edit();
+    });
+
 } else {
+    // Add Catchall Routes - for when session times out
+    $router->get('*', function() use ($authController) {
+        header('Location: /login');
+    })->post('*', function() use ($authController) {
+        header('Location: /login');
+    });
+
+    // Allow totals to be accessible to all without login
     $router->get('/', function() use ($totalsController) {
         $totalsController->list();
-    })->get('/login', function() use ($authController) {
+    });
+
+    // Login and logout routes
+    $router->get('/login', function() use ($authController) {
         $authController->show();
     })->post('/login', function() use ($authController) {
         $username = trim($_POST['username'] ?? 'default');

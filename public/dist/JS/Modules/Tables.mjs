@@ -1,10 +1,12 @@
 export function init() {
-    epgpDatatable();
+    initDatatable('current-epgp-standings');
+    initDatatable('character-management');
 }
 
-function epgpDatatable() {
-    let table = $('#current-epgp-standings');
+function initDatatable(id) {
+    const table = $('#' + id);
     if (table.length > 0) {
         table.DataTable();
     }
 }
+

@@ -95,7 +95,16 @@ HTML;
 
         // Check to see if the action has been registered with the correct request method.
         if (!array_key_exists($action, $this->routes[$method])) {
-            header('HTTP/1.0 403 Forbidden', true, 403);
+            if (array_key_exists('*', $this->routes[$method])) {
+                try {
+                    $callback = $this->routes[$method]['*'];
+                    call_user_func($callback);
+                } catch (Exception $e) {
+                    error_log($e->getMessage());
+                }
+            } else {
+                header('HTTP/1.0 403 Forbidden', true, 403);
+            }
             exit();
         }
 

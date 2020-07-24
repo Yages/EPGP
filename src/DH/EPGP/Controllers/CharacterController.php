@@ -1,0 +1,111 @@
+<?php declare(strict_types=1);
+
+
+namespace DH\EPGP\Controllers;
+
+use DH\EPGP\Models\CharacterModel;
+use DH\EPGP\Repositories\CharacterRepository;
+use DH\EPGP\Repositories\GuildRepository;
+use DH\EPGP\Views\CharacterManagementView;
+
+/**
+ * Class CharacterController
+ * @package DH\EPGP\Controllers
+ * @author Lucas Bradd <lucas@bradd.com.au>
+ */
+class CharacterController extends Controller
+{
+    /**
+     * Lists the current active characters
+     */
+    public function list()
+    {
+        $view = new CharacterManagementView();
+        $characterData = (new CharacterRepository())->fetchAll();
+        $guildData = (new GuildRepository())->fetchAll();
+        $view->setCharacterData($characterData);
+        $view->setGuildData($guildData);
+        $view->view();
+    }
+
+    /**
+     * Deactivate a character.
+     */
+    public function deactivate()
+    {
+        if (empty($_POST['character_id'])) {
+            $this->toJson([
+                'success' => false,
+                'message' => 'You must include a valid character ID',
+            ]);
+        } else {
+            $character = new CharacterModel((int) $_POST['character_id']);
+
+            $result = $character->deactivate();
+            $this->toJson([
+                'success' => $result,
+            ]);
+        }
+    }
+
+    /**
+     * Handles editing existing Character entry (via Ajax).
+     */
+    public function edit() : void
+    {
+        parse_str($_POST['character'], $characterData);
+
+        if (empty($_POST['character_id'])) {
+            $this->toJson([
+                'success' => false,
+                'message' => 'You must include a valid character ID',
+            ]);
+        } elseif (empty($characterData['name'])) {
+            $this->toJson([
+                'success' => false,
+                'message' => 'You must include a valid character Name',
+            ]);
+        } elseif (empty($characterData['class'])) {
+            $this->toJson([
+                'success' => false,
+                'message' => 'You must include a valid character Class',
+            ]);
+        } elseif (empty($characterData['role'])) {
+            $this->toJson([
+                'success' => false,
+                'message' => 'You must include a valid character Role',
+            ]);
+        } elseif (empty($characterData['guild'])) {
+            $this->toJson([
+                'success' => false,
+                'message' => 'You must include a valid character Guild',
+            ]);
+        }
+        else {
+            $character = new CharacterModel((int) $_POST['character_id']);
+            $character->setName($characterData['name']);
+            $character->setClass($characterData['class']);
+            $character->setRole($characterData['role']);
+            $character->setGuildId((int) $characterData['guild']);
+            $character->setActive(true);
+            $result = $character->save();
+
+            if (!$result) {
+                $this->toJson(
+                    [
+                        'success' => false,
+                        'message' => 'Failed to save changes to character.'
+                    ]
+                );
+            } else {
+                $this->toJson(
+                    [
+                        'success' => true,
+                        'message' => 'Successfully saved changes to character.',
+                        'character' => $character,
+                    ]
+                );
+            }
+        }
+    }
+}

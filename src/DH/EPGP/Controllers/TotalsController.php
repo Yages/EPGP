@@ -4,6 +4,7 @@
 namespace DH\EPGP\Controllers;
 
 use DH\EPGP\Models\UserModel;
+use DH\EPGP\Repositories\CharacterRepository;
 use DH\EPGP\Views\TotalsView;
 
 /**
@@ -19,6 +20,8 @@ class TotalsController extends Controller
     public function list(?UserModel $user = null)
     {
         $view = new TotalsView($user);
+        $data = (new CharacterRepository())->fetchAll();
+        $view->setCharacterData($data);
         $view->view();
     }
 }
