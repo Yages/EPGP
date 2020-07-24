@@ -1,0 +1,52 @@
+{% extends "main.twig" %}
+
+{% block title %}Location Management{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1><i class="far fa-compass"></i> Location Management</h1>
+    </div>
+    <div class="row">
+        <div class="col my-4">
+            <button id="add-location" type="button" role="button" class="btn btn-outline-primary"><i class="far fa-compass"></i> Add Location</button>
+        </div>
+    </div>
+    <table id="location-management" class="table table-striped text-light" style="width:100%;">
+        <thead class="text-dark bg-light">
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for location in locations %}
+                <tr>
+                    <td>{{ location.getName }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="modal fade" id="location-add-modal" tabindex="-1" role="dialog" aria-labelledby="location-add-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title" id="location-add-modal-label">Add Location</h5>
+                    <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-dark">
+                    <form id="location-form">
+                        <div class="form-group">
+                            <label for="name">Location Name</label>
+                            <input id="name" name="name" type="text" class="form-control" placeholder="Location Name" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-dark">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="location-save" type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

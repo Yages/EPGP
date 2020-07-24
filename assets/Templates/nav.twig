@@ -8,7 +8,7 @@
             {% if user.isOfficer %}
                 {%  if user.isOfficer and not user.isLooter and not user.isAdmin %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Totals</a>
+                        <a class="nav-link" href="/"><i class="fas fa-chart-line"></i> Totals</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/raids">Raids</a>
@@ -16,13 +16,13 @@
                 {% endif %}
                 {%  if user.isLooter %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Totals</a>
+                        <a class="nav-link" href="/"><i class="fas fa-chart-line"></i> Totals</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/raids">Raids</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/characters">Characters</a>
+                        <a class="nav-link" href="/characters"><i class="fas fa-users"></i> Characters</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/loot">Loot</a>
@@ -33,10 +33,10 @@
                 {% endif  %}
                 {% if user.isAdmin %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/guilds">Guilds</a>
+                        <a class="nav-link" href="/guilds"><i class="fas fa-user-friends"></i> Guilds</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/locations">Locations</a>
+                        <a class="nav-link" href="/locations"><i class="far fa-compass"></i> Locations</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin">Admin</a>

@@ -5,7 +5,9 @@ namespace DH\EPGP;
 use DH\EPGP\Controllers\AuthController;
 use DH\EPGP\Controllers\CharacterController;
 use DH\EPGP\Controllers\GuildController;
+use DH\EPGP\Controllers\LocationController;
 use DH\EPGP\Controllers\TotalsController;
+use DH\EPGP\Models\LocationModel;
 
 date_default_timezone_set('Australia/Melbourne');
 
@@ -51,6 +53,15 @@ if ($authController->checkSession()) {
     });
     $router->post('/guilds/create', function() use ($guildController) {
         $guildController->create();
+    });
+
+    // Location Stuff
+    $locationController = new LocationController();
+    $router->get('/locations', function() use ($locationController) {
+        $locationController->list();
+    });
+    $router->post('/locations/create', function() use ($locationController) {
+        $locationController->create();
     });
 
 } else {
