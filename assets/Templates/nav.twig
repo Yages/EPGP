@@ -1,52 +1,46 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">DH & Syz EPGP</a>
+    <a class="navbar-brand" href="/">Raid Alliance EPGP</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/"><i class="fas fa-chart-line"></i> Totals</a>
+            </li>
             {% if user.isOfficer %}
                 {%  if user.isOfficer and not user.isLooter and not user.isAdmin %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/"><i class="fas fa-chart-line"></i> Totals</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/raids">Raids</a>
+                        <a class="nav-link" href="/raids"><i class="fas fa-dungeon"></i> Raids</a>
                     </li>
                 {% endif %}
                 {%  if user.isLooter %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/"><i class="fas fa-chart-line"></i> Totals</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/raids">Raids</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="/characters"><i class="fas fa-users"></i> Characters</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/loot">Loot</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/epgp">EPGP</a>
+                        <a class="nav-link" href="/raids"><i class="fas fa-dungeon"></i> Raids</a>
                     </li>
                 {% endif  %}
                 {% if user.isAdmin %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/guilds"><i class="fas fa-user-friends"></i> Guilds</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/locations"><i class="far fa-compass"></i> Locations</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin">Admin</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="admin-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-cogs"></i> Admin
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="admin-dropdown">
+                            <a class="dropdown-item" href="/epgp"><i class="fas fa-poll"></i> EPGP</a>
+                            <a class="dropdown-item" href="/loot"><i class="fas fa-coins"></i> Loot</a>
+                            <a class="dropdown-item" href="/guilds"><i class="fas fa-user-friends"></i> Guilds</a>
+                            <a class="dropdown-item" href="/locations"><i class="far fa-compass"></i> Locations</a>
+                            <a class="dropdown-item" href="/bosses"><i class="fas fa-skull-crossbones"></i> Bosses</a>
+                        </div>
                     </li>
                 {% endif %}
             {% endif %}
         </ul>
         <ul class="navbar-nav ml-auto">
             {% if user.isOfficer %}
-                <a class="navbar-brand" href="/logout">Hi {{ user.getUsername|capitalize }}</a>
+                <span class="navbar-text">Hi {{ user.getUsername|capitalize }}</span>
                 <li class="nav-item">
                     <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </li>

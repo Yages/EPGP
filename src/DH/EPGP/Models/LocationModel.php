@@ -20,6 +20,9 @@ class LocationModel extends AbstractModel
     /** @var string */
     private string $name;
 
+    /** @var int */
+    private int $bossCount;
+
     /**
      * LocationModel constructor.
      * @param int|null $id
@@ -42,7 +45,8 @@ class LocationModel extends AbstractModel
             return false;
         }
 
-        $query = "SELECT name
+        $query = "SELECT name,
+                         boss_count
                     FROM Locations 
                    WHERE id = :id";
 
@@ -55,7 +59,7 @@ class LocationModel extends AbstractModel
 
         $locationData = $stmt->fetch();
         $this->name = $locationData['name'];
-
+        $this->bossCount = (int) $locationData['boss_count'];
 
         return true;
     }
@@ -71,17 +75,25 @@ class LocationModel extends AbstractModel
         }
 
         if (empty($this->id)) {
-            $query = "INSERT INTO Locations (name) 
-                           VALUES (:name)";
+            $query = "INSERT INTO Locations (name, boss_count) 
+                           VALUES (:name, :boss_count)";
             $stmt = $this->pdo()->prepare($query);
-            $result = $stmt->execute([':name' => $this->name]);
+            $result = $stmt->execute([
+                ':name' => $this->name,
+                ':boss_count' => $this->bossCount,
+            ]);
             $this->id = (int) $this->pdo()->lastInsertId();
         } else {
             $query = "UPDATE Locations
-                         SET name = :name
+                         SET name = :name,
+                             boss_count = :boss_count
                        WHERE id = :id";
             $stmt = $this->pdo()->prepare($query);
-            $result = $stmt->execute([':name' => $this->name]);
+            $result = $stmt->execute([
+                ':name' => $this->name,
+                ':boss_count' => $this->bossCount,
+                ':id' => $this->id,
+            ]);
         }
 
         return $result;
@@ -95,6 +107,7 @@ class LocationModel extends AbstractModel
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'bossCount' => $this->bossCount,
         ];
     }
 
@@ -122,5 +135,63 @@ class LocationModel extends AbstractModel
     {
         $this->name = $name;
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBossCount(): int
+    {
+        return $this->bossCount;
+    }
+
+    /**
+     * @param int $count
+     * @return LocationModel
+     */
+    public function setBossCount(int $count): LocationModel
+    {
+        $this->bossCount = $count;
+        return $this;
+    }
+
+    /**
+     * Checks a given kill order to see if there's an issue with the new boss
+     * record clashing.
+     * @param int $order
+     * @return bool
+     */
+    public function checkKillOrder(int $order): bool
+    {
+        // Cant be zero
+        if ($order === 0) {
+            return false;
+        }
+
+        // Cant be greater than our max boss count
+        if ($order > $this->bossCount) {
+            return false;
+        }
+
+        // Cant exist already
+        $query = "SELECT COUNT(*) 
+                    FROM Boss b
+                         INNER JOIN Locations l 
+                         ON b.location_id = l.id
+                   WHERE b.kill_order = :killOrder
+                     AND l.id = :id";
+        $stmt = $this->pdo()->prepare($query);
+        $result = $stmt->execute([
+            ':killOrder' => $order,
+            ':id' => $this->id,
+        ]);
+
+        if (!$result) return false;
+
+        $collisions = $stmt->fetch()[0];
+
+        if ($collisions > 0) return false;
+
+        return true;
     }
 }

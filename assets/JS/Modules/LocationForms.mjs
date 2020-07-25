@@ -18,6 +18,7 @@ function prepareLocationEventListeners() {
                 if (data.success) {
                     let newRow = '<tr>' +
                         '  <td>' + data.location.name + '</td>' +
+                        '  <td>' + data.location.bossCount + '</td>' +
                         '</tr>';
                     let table = new $.fn.dataTable.Api('#location-management');
                     table.row.add($(newRow)).draw();

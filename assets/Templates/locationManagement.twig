@@ -15,12 +15,14 @@
         <thead class="text-dark bg-light">
             <tr>
                 <th>Name</th>
+                <th>Boss Encounters</th>
             </tr>
         </thead>
         <tbody>
             {% for location in locations %}
                 <tr>
                     <td>{{ location.getName }}</td>
+                    <td>{{ location.getBossCount }}</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -39,6 +41,10 @@
                         <div class="form-group">
                             <label for="name">Location Name</label>
                             <input id="name" name="name" type="text" class="form-control" placeholder="Location Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="boss-count">Boss Encounters</label>
+                            <input id="boss-count" name="boss-count" type="number" class="form-control" required>
                         </div>
                     </form>
                 </div>

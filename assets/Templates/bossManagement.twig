@@ -1,0 +1,114 @@
+{% extends "main.twig" %}
+
+{% block title %}Boss Management{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1><i class="fas fas fa-skull-crossbones"></i> Boss Management</h1>
+    </div>
+    {% if locations is not empty %}
+    <div class="row">
+        <div class="col my-4">
+            <button id="add-boss" type="button" role="button" class="btn btn-outline-primary"><i class="fas fas fa-skull-crossbones"></i> Add Boss</button>
+        </div>
+    </div>
+    <table id="boss-management" class="table table-striped text-light" style="width:100%;">
+        <thead class="text-dark bg-light">
+            <tr>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Effort Points</th>
+                <th>Kill Order</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for boss in bosses %}
+                <tr>
+                    <td>{{ boss.getName }}</td>
+                    <td>{{ boss.getLocationName }}</td>
+                    <td>{{ boss.getEffortPoints }}</td>
+                    <td>{{ boss.getKillOrder }}</td>
+                    <td>
+                        <button data-id="{{ boss.getId }}" data-boss='{{ boss|json_encode(constant('JSON_HEX_APOS')) }}' type="button" data-toggle="tooltip" title="Edit {{ boss.getName|capitalize }}'s Effort Points" class="btn btn-sm btn-outline-primary edit-boss-details"><i class="fas fa-edit"></i></button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="modal fade" id="boss-add-modal" tabindex="-1" role="dialog" aria-labelledby="boss-add-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title" id="boss-add-modal-label">Add Boss</h5>
+                    <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-dark">
+                    <form id="boss-form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input id="name" name="name" type="text" class="form-control" placeholder="Boss Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <select name="location" id="location" class="form-control">
+                                {% for location in locations %}
+                                    <option data-bosses="{{ location.bossCount }}" value="{{ location.id }}">{{ location.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="effort-points">Effort Points</label>
+                            <input id="effort-points" name="effort-points" type="number" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="boss-order">Boss Kill Order</label>
+                            <input id="boss-order" name="boss-order" type="number" min="1" class="form-control" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-dark">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="boss-save" type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="boss-edit-modal" tabindex="-1" role="dialog" aria-labelledby="boss-edit-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title" id="boss-edit-modal-label"></h5>
+                    <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-dark">
+                    <form id="boss-edit-form">
+                        <div class="form-group">
+                            <label for="name-edit">Name</label>
+                            <input id="name-edit" name="name-edit" type="text" readonly class="form-control-plaintext">
+                        </div>
+                        <div class="form-group">
+                            <label for="effort-points-edit">Effort Points</label>
+                            <input id="effort-points-edit" name="effort-points-edit" type="number" class="form-control" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-dark">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="boss-edit-save" type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col">
+            <p class="lead">You must add <a href="/locations">locations</a> before you can add bosses.</p>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

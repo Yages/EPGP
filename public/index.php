@@ -3,6 +3,7 @@
 namespace DH\EPGP;
 
 use DH\EPGP\Controllers\AuthController;
+use DH\EPGP\Controllers\BossController;
 use DH\EPGP\Controllers\CharacterController;
 use DH\EPGP\Controllers\GuildController;
 use DH\EPGP\Controllers\LocationController;
@@ -62,6 +63,17 @@ if ($authController->checkSession()) {
     });
     $router->post('/locations/create', function() use ($locationController) {
         $locationController->create();
+    });
+
+    // Boss Stuff
+    $bossController = new BossController();
+    $router->get('/bosses', function () use ($bossController) {
+        $bossController->list();
+    });
+    $router->post('/bosses/create', function() use ($bossController) {
+        $bossController->create();
+    })->post('/bosses/edit', function() use ($bossController) {
+        $bossController->edit();
     });
 
 } else {

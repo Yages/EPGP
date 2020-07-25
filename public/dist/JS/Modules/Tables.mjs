@@ -3,6 +3,7 @@ export function init() {
     initDatatable('character-management');
     initDatatable('guild-management');
     initDatatable('location-management');
+    initDatatable('boss-management');
 }
 
 function initDatatable(id) {

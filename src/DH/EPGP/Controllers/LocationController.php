@@ -29,7 +29,12 @@ class LocationController extends Controller
         $view->view();
     }
 
-    public function create() {
+    /**
+     * Creates a new Location from user data.
+     * @return void
+     */
+    public function create(): void
+    {
         parse_str($_POST['location'], $locationData);
 
         if (empty($locationData['name'])) {
@@ -37,9 +42,15 @@ class LocationController extends Controller
                 'success' => false,
                 'message' => 'You must include a valid location Name',
             ]);
+        } if (empty($locationData['boss-count'])) {
+            $this->toJson([
+                'success' => false,
+                'message' => 'You must include a valid number of Boss Encounters',
+            ]);
         } else {
             $location = new LocationModel();
             $location->setName($locationData['name']);
+            $location->setBossCount((int) $locationData['boss-count']);
             $result = $location->save();
 
             if (!$result) {

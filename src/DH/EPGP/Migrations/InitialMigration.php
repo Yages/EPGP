@@ -83,6 +83,7 @@ class InitialMigration extends Migration
         $query = "CREATE TABLE Locations (
                       id INT(6) UNSIGNED AUTO_INCREMENT,
                       name VARCHAR(100) NOT NULL,
+                      boss_count INT(6) NOT NULL,
                       PRIMARY KEY (id)
                   )";
 
@@ -100,6 +101,7 @@ class InitialMigration extends Migration
                       location_id INT(6) NOT NULL, 
                       name VARCHAR(100) NOT NULL,
                       effort_points INT NOT NULL,
+                      kill_order INT NOT NULL,
                       PRIMARY KEY (id)
                   )";
 
