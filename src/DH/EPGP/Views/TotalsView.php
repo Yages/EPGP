@@ -43,9 +43,11 @@ class TotalsView extends AbstractView
     /**
      * Sets the character data for the view.
      * @param array $data
+     * @return TotalsView
      */
-    public function setCharacterData(array $data)
+    public function setCharacterData(array $data): TotalsView
     {
         $this->characterData = $data;
+        return $this;
     }
 }

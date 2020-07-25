@@ -7,6 +7,7 @@ use DH\EPGP\Controllers\BossController;
 use DH\EPGP\Controllers\CharacterController;
 use DH\EPGP\Controllers\GuildController;
 use DH\EPGP\Controllers\LocationController;
+use DH\EPGP\Controllers\LootController;
 use DH\EPGP\Controllers\TotalsController;
 use DH\EPGP\Models\LocationModel;
 
@@ -74,6 +75,12 @@ if ($authController->checkSession()) {
         $bossController->create();
     })->post('/bosses/edit', function() use ($bossController) {
         $bossController->edit();
+    });
+
+    // Loot Stuff
+    $lootController = new LootController();
+    $router->get('/loot', function () use ($lootController) {
+        $lootController->list();
     });
 
 } else {

@@ -231,10 +231,13 @@ class InitialMigration extends Migration
         // Create Loot Table
         $this->pdo()->exec('DROP TABLE IF EXISTS Loot');
         $query = "CREATE TABLE Loot(
-                      id INT(6) UNSIGNED AUTO_INCREMENT,
+                      id INT(6),
+                      name VARCHAR(255) NOT NULL,
                       boss_id INT(6),
-                      location_id INT(6),
-                      slot INT(6),
+                      location_id INT(6) NOT NULL,
+                      slot INT(6) NOT NULL,
+                      item_level INT(6) NOT NULL,
+                      rarity INT(6) NOT NULL, 
                       PRIMARY KEY (id)
                   )";
 
