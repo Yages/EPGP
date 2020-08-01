@@ -4,7 +4,7 @@
 namespace DH\EPGP\Controllers;
 
 use DH\EPGP\Models\UserModel;
-use DH\EPGP\Traits\DBAwareTrait;
+use DH\EPGP\Utilities\DB;
 
 /**
  * Class Controller
@@ -13,14 +13,15 @@ use DH\EPGP\Traits\DBAwareTrait;
  */
 class Controller
 {
-    use DBAwareTrait;
-
     /** @var UserModel|null */
-    private $user;
+    protected ?UserModel $user;
+
+    /** @var DB|null */
+    protected ?DB $db;
 
     public function __construct()
     {
-        $this->connect();
+        $this->db = DB::getInstance();
         $this->user = AuthController::getLoggedInUser();
     }
 
@@ -56,5 +57,4 @@ class Controller
         );
         $array = array_combine($keys, $values);
     }
-
 }

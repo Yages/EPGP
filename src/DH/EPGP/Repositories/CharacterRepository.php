@@ -5,17 +5,14 @@ namespace DH\EPGP\Repositories;
 
 
 use DH\EPGP\Models\CharacterModel;
-use DH\EPGP\Traits\DBAwareTrait;
 
 /**
  * Class CharacterRepository
  * @package DH\EPGP\Repositories
  * @author Lucas Bradd <lucas@bradd.com.au>
  */
-class CharacterRepository
+class CharacterRepository extends Repository
 {
-    use DBAwareTrait;
-
     /**
      * Returns all active Users by default, Inactive users if passed false.
      * @param bool $active
@@ -29,7 +26,7 @@ class CharacterRepository
         $query = "SELECT id 
                     FROM Characters 
                    WHERE active = :active";
-        $stmt = $this->pdo()->prepare($query);
+        $stmt = $this->db->pdo()->prepare($query);
         $stmt->execute([':active' => $active]);
         $ids = $stmt->fetchAll();
 
@@ -62,7 +59,7 @@ class CharacterRepository
                     FROM Characters 
                    WHERE active = 1
                      AND guild_id = :guild_id";
-        $stmt = $this->pdo()->prepare($query);
+        $stmt = $this->db->pdo()->prepare($query);
         $stmt->execute([':guild_id' => $guildId]);
         $ids = $stmt->fetchAll();
 
@@ -86,7 +83,7 @@ class CharacterRepository
                     FROM Characters 
                    WHERE active = 1
                      AND class = :class";
-        $stmt = $this->pdo()->prepare($query);
+        $stmt = $this->db->pdo()->prepare($query);
         $stmt->execute([':class' => $class]);
         $ids = $stmt->fetchAll();
 

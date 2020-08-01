@@ -4,17 +4,14 @@
 namespace DH\EPGP\Repositories;
 
 use DH\EPGP\Models\GuildModel;
-use DH\EPGP\Traits\DBAwareTrait;
 
 /**
  * Class GuildRepository
  * @package DH\EPGP\Repositories
  * @author Lucas Bradd <lucas@bradd.com.au>
  */
-class GuildRepository
+class GuildRepository extends Repository
 {
-    use DBAwareTrait;
-
     /**
      * Returns all guild records.
      * @return array
@@ -23,7 +20,7 @@ class GuildRepository
     {
         $guilds = [];
         $query = "SELECT id FROM Guild";
-        $stmt = $this->pdo()->query($query);
+        $stmt = $this->db->pdo()->query($query);
         $ids = $stmt->fetchAll();
 
         foreach ($ids as $row) {

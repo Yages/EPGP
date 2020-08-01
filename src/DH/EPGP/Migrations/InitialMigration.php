@@ -233,7 +233,6 @@ class InitialMigration extends Migration
         $query = "CREATE TABLE Loot(
                       id INT(6),
                       name VARCHAR(255) NOT NULL,
-                      boss_id INT(6),
                       location_id INT(6) NOT NULL,
                       slot INT(6) NOT NULL,
                       item_level INT(6) NOT NULL,
@@ -246,6 +245,22 @@ class InitialMigration extends Migration
         if ($result === false) {
             $this->rollback();
             die('Failed to create Loot Table');
+        }
+
+        // Create BossLoot Table
+        $this->pdo()->exec('DROP TABLE IF EXISTS BossLoot');
+        $query = "CREATE TABLE BossLoot(
+                      id INT(6) UNSIGNED AUTO_INCREMENT,
+                      loot_id INT(6) NOT NULL,
+                      boss_id INT(6) NOT NULL, 
+                      PRIMARY KEY (id)
+                  )";
+
+        $result = $this->pdo()->exec($query);
+
+        if ($result === false) {
+            $this->rollback();
+            die('Failed to create BossLoot Table');
         }
 
         // Create GearPoints Table

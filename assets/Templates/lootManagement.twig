@@ -52,18 +52,58 @@
         <tbody>
             {% for item in loot %}
                 <tr>
-                    <td>{{ loot.getId }}</td>
-                    <td>{{ loot.getName }}</td>
-                    <td>{{ loot.getLocation }}</td>
-                    <td>{{ loot.getBoss|default('Trash') }}</td>
-                    <td>{{ loot.getSlot }}</td>
+                    <td>{{ item.getId }}</td>
+                    <td><a target="_blank" href="https://classic.wowhead.com/item={{ item.getId }}">{{ item.getName }}</a></td>
+                    <td>{{ item.getLocationName }}</td>
+                    <td>{{ item.getBossNames|join(',') }}</td>
+                    <td>{{ item.getSlotName }}</td>
                     <td>
-                        <button data-id="{{ loot.getId }}" type="button" data-toggle="tooltip" title="Delete {{ loot.getName }}" class="btn btn-sm btn-outline-danger delete-loot"><i class="fas fa-delete"></i></button>
+                        <button data-id="{{ item.getId }}" type="button" data-toggle="tooltip" title="Delete {{ item.getName }}" class="btn btn-sm btn-outline-danger delete-loot"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+    <div class="modal fade" id="loot-add-modal" tabindex="-1" role="dialog" aria-labelledby="loot-add-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title" id="loot-add-modal-label">Add Loot Item</h5>
+                    <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-dark">
+                    <form id="boss-form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input id="name" name="name" type="text" class="form-control" placeholder="Boss Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <select name="location" id="location" class="form-control">
+                                {% for location in locations %}
+                                    <option data-bosses="{{ location.bossCount }}" value="{{ location.id }}">{{ location.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="effort-points">Effort Points</label>
+                            <input id="effort-points" name="effort-points" type="number" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="boss-order">Boss Kill Order</label>
+                            <input id="boss-order" name="boss-order" type="number" min="1" class="form-control" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-dark">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button data-action="check-loot" id="loot-add" type="button" class="btn btn-danger">Check Item</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="loot-confirm-modal" tabindex="-1" role="dialog" aria-labelledby="loot-confirm-modal-label" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">

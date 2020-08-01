@@ -5,12 +5,14 @@ namespace DH\EPGP\Repositories;
 
 
 use DH\EPGP\Models\BossModel;
-use DH\EPGP\Traits\DBAwareTrait;
 
-class BossRepository
+/**
+ * Class BossRepository
+ * @package DH\EPGP\Repositories
+ * @author Lucas Bradd <lucas@bradd.com.au>
+ */
+class BossRepository extends Repository
 {
-    use DBAwareTrait;
-
     /**
      * Returns all boss records.
      * @return array
@@ -19,7 +21,7 @@ class BossRepository
     {
         $boss = [];
         $query = "SELECT id from Boss";
-        $stmt = $this->pdo()->query($query);
+        $stmt = $this->db->pdo()->query($query);
         $ids = $stmt->fetchAll();
 
         foreach ($ids as $row) {

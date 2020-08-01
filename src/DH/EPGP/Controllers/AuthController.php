@@ -92,7 +92,7 @@ class AuthController extends Controller
             $query = "SELECT password
                         FROM Administrators 
                        WHERE username = :username";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $stmt->execute([':username' => $username]);
             $results = $stmt->fetch(PDO::FETCH_NUM);
 

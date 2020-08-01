@@ -6,6 +6,9 @@ namespace DH\EPGP\Controllers;
 use DH\EPGP\Models\UserModel;
 use DH\EPGP\Repositories\CharacterRepository;
 use DH\EPGP\Views\TotalsView;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 /**
  * Class TotalsController
@@ -17,9 +20,9 @@ class TotalsController extends Controller
     /**
      * Lists the current EPGP Totals
      */
-    public function list(?UserModel $user = null)
+    public function list()
     {
-        $view = new TotalsView($user);
+        $view = new TotalsView();
         $data = (new CharacterRepository())->fetchAll();
         $view->setCharacterData($data);
         $view->view();

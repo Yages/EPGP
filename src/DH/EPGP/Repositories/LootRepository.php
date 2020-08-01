@@ -3,17 +3,15 @@
 
 namespace DH\EPGP\Repositories;
 
-use DH\EPGP\Traits\DBAwareTrait;
+use DH\EPGP\Models\LootModel;
 
 /**
  * Class LootRepository
  * @package DH\EPGP\Repositories
  * @author Lucas Bradd <lucas@bradd.com.au>
  */
-class LootRepository
+class LootRepository extends Repository
 {
-    use DBAwareTrait;
-
     /**
      * @param array|null $filters
      * @return array
@@ -35,12 +33,14 @@ class LootRepository
             $params[':boss'] = $filters['boss'];
         }
 
-        $stmt = $this->pdo()->prepare($query);
+        $stmt = $this->db->pdo()->prepare($query);
         $stmt->execute($params);
         $ids = $stmt->fetchAll();
 
         foreach ($ids as $row) {
-            $loot[] = new LootModel((int) $row['id']);
+            $item = new LootModel((int) $row['id']);
+            $item->load();
+            $loot[] = $item;
         }
 
         return $loot;

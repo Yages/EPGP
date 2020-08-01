@@ -5,11 +5,9 @@ namespace DH\EPGP\Repositories;
 
 
 use DH\EPGP\Models\LocationModel;
-use DH\EPGP\Traits\DBAwareTrait;
 
-class LocationRepository
+class LocationRepository extends Repository
 {
-    use DBAwareTrait;
 
     /**
      * Returns all location records.
@@ -19,7 +17,7 @@ class LocationRepository
     {
         $locations = [];
         $query = "SELECT id from Locations";
-        $stmt = $this->pdo()->query($query);
+        $stmt = $this->db->pdo()->query($query);
         $ids = $stmt->fetchAll();
 
         foreach ($ids as $row) {

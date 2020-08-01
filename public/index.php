@@ -9,7 +9,7 @@ use DH\EPGP\Controllers\GuildController;
 use DH\EPGP\Controllers\LocationController;
 use DH\EPGP\Controllers\LootController;
 use DH\EPGP\Controllers\TotalsController;
-use DH\EPGP\Models\LocationModel;
+use DH\EPGP\Utilities\Router;
 
 date_default_timezone_set('Australia/Melbourne');
 

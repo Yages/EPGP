@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 
-namespace DH\EPGP;
+namespace DH\EPGP\Utilities;
 
 
 use Closure;
