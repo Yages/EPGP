@@ -3,8 +3,6 @@
 
 namespace DH\EPGP\Models;
 
-use DH\EPGP\Traits\DBAwareTrait;
-
 /**
  * Class LocationModel
  * @package DH\EPGP\Models
@@ -12,8 +10,6 @@ use DH\EPGP\Traits\DBAwareTrait;
  */
 class LocationModel extends AbstractModel
 {
-    use DBAwareTrait;
-
     /** @var int */
     private int $id;
 
@@ -29,6 +25,7 @@ class LocationModel extends AbstractModel
      */
     public function __construct(?int $id = null)
     {
+        parent::__construct();
         if (!empty($id)) {
             $this->id = $id;
             $this->load();
@@ -50,7 +47,7 @@ class LocationModel extends AbstractModel
                     FROM Locations 
                    WHERE id = :id";
 
-        $stmt = $this->pdo()->prepare($query);
+        $stmt = $this->db->pdo()->prepare($query);
         $result = $stmt->execute([':id' => $this->id]);
 
         if (!$result) {
@@ -77,18 +74,18 @@ class LocationModel extends AbstractModel
         if (empty($this->id)) {
             $query = "INSERT INTO Locations (name, boss_count) 
                            VALUES (:name, :boss_count)";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([
                 ':name' => $this->name,
                 ':boss_count' => $this->bossCount,
             ]);
-            $this->id = (int) $this->pdo()->lastInsertId();
+            $this->id = (int) $this->db->pdo()->lastInsertId();
         } else {
             $query = "UPDATE Locations
                          SET name = :name,
                              boss_count = :boss_count
                        WHERE id = :id";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([
                 ':name' => $this->name,
                 ':boss_count' => $this->bossCount,
@@ -180,7 +177,7 @@ class LocationModel extends AbstractModel
                          ON b.location_id = l.id
                    WHERE b.kill_order = :killOrder
                      AND l.id = :id";
-        $stmt = $this->pdo()->prepare($query);
+        $stmt = $this->db->pdo()->prepare($query);
         $result = $stmt->execute([
             ':killOrder' => $order,
             ':id' => $this->id,

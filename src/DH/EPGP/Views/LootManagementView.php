@@ -24,12 +24,9 @@ class LootManagementView extends AbstractView
     /** @var array */
     private array $lootData;
 
-    /** @var int */
-    private int $bossFilter = 0;
-
-    /** @var int */
-    private int $locationFilter = 0;
-
+    /**
+     * LootManagementView constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -48,9 +45,7 @@ class LootManagementView extends AbstractView
             [
                 'loot' => $this->lootData,
                 'locations' => $this->locationData,
-                'locationFilter' => $this->locationFilter,
                 'bosses' => $this->bossData,
-                'bossFilter' => $this->bossFilter,
                 'user' => $this->user,
             ]
         );
@@ -80,29 +75,9 @@ class LootManagementView extends AbstractView
      * @param array $data
      * @return LootManagementView
      */
-    public function setlootData(array $data): LootManagementView
+    public function setLootData(array $data): LootManagementView
     {
         $this->lootData = $data;
-        return $this;
-    }
-
-    /**
-     * @param int $filter
-     * @return LootManagementView
-     */
-    public function setLocationFilter(int $filter): LootManagementView
-    {
-        $this->locationFilter = $filter;
-        return $this;
-    }
-
-    /**
-     * @param int $filter
-     * @return LootManagementView
-     */
-    public function setBossFilter(int $filter): LootManagementView
-    {
-        $this->bossFilter = $filter;
         return $this;
     }
 }

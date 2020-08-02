@@ -5,7 +5,6 @@ namespace DH\EPGP\Models;
 
 use DateTime;
 use DateTimeImmutable;
-use DH\EPGP\Traits\DBAwareTrait;
 use Exception;
 
 /**
@@ -15,8 +14,6 @@ use Exception;
  */
 class UserModel extends AbstractModel
 {
-    use DBAwareTrait;
-
     /** @var int */
     private int $id;
 
@@ -50,6 +47,7 @@ class UserModel extends AbstractModel
      */
     public function __construct($id = false)
     {
+        parent::__construct();
         if (!empty($id)) {
             if (is_numeric($id)) {
                 $this->id = $id;
@@ -77,11 +75,11 @@ class UserModel extends AbstractModel
         ";
         if (!empty($this->id)) {
             $query .= "WHERE id = :id";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([':id' => $this->id]);
         } else {
             $query .= "WHERE username = :username";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([':username' => $this->username]);
         }
 
@@ -116,7 +114,7 @@ class UserModel extends AbstractModel
         if (empty($this->id)) {
             $query = "INSERT INTO Administrators (username, password, role, date_created, date_updated)
                            VALUES (:username, :password, :role, NOW(), NOW())";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $this->password = $this->generatePassword();
             $password = password_hash($this->password, PASSWORD_DEFAULT);
             $result = $stmt->execute([
@@ -124,13 +122,13 @@ class UserModel extends AbstractModel
                 ':password' => $password,
                 ':role' => $this->role,
             ]);
-            $this->id = $this->pdo()->lastInsertId();
+            $this->id = $this->db->pdo()->lastInsertId();
         } else {
             $query = "UPDATE Administrators 
                          SET username = :username, 
                              role = :role, 
                              date_updated = NOW()";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([
                 ':username' => $this->username,
                 ':role' => $this->role,

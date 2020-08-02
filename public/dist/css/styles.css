@@ -80,4 +80,29 @@
   margin-top: 5px;
 }
 
+.boss-action {
+  width: 55px;
+}
+
+.detail-panel {
+  background: #1D2125;
+  border-radius: 3px;
+  padding: 15px;
+  margin: 30px 0;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-panel .detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.detail-panel .detail-label {
+  font-weight: bold;
+}
+
 /*# sourceMappingURL=styles.css.map */

@@ -4,8 +4,6 @@
 namespace DH\EPGP\Models;
 
 
-use DH\EPGP\Traits\DBAwareTrait;
-
 /**
  * Class BossModel
  * @package DH\EPGP\Models
@@ -13,8 +11,6 @@ use DH\EPGP\Traits\DBAwareTrait;
  */
 class BossModel extends AbstractModel
 {
-    use DBAwareTrait;
-
     /** @var int */
     private int $id;
 
@@ -39,6 +35,7 @@ class BossModel extends AbstractModel
      */
     public function __construct(?int $id = null)
     {
+        parent::__construct();
         if (!empty($id)) {
             $this->id = $id;
             $this->load();
@@ -65,7 +62,7 @@ class BossModel extends AbstractModel
                          ON b.location_id = l.id 
                    WHERE b.id = :id";
 
-        $stmt = $this->pdo()->prepare($query);
+        $stmt = $this->db->pdo()->prepare($query);
         $result = $stmt->execute([':id' => $this->id]);
 
         if (!$result) {
@@ -95,14 +92,14 @@ class BossModel extends AbstractModel
         if (empty($this->id)) {
             $query = "INSERT INTO Boss (location_id, name, effort_points, kill_order) 
                            VALUES (:location_id, :name, :effort_points, :kill_order)";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([
                 'location_id' => $this->locationId,
                 ':name' => $this->name,
                 ':effort_points' => $this->effortPoints,
                 ':kill_order' => $this->killOrder,
             ]);
-            $this->id = (int) $this->pdo()->lastInsertId();
+            $this->id = (int) $this->db->pdo()->lastInsertId();
             $this->updateLocationName();
         } else {
             $query = "UPDATE Boss
@@ -111,7 +108,7 @@ class BossModel extends AbstractModel
                              effort_points = :effort_points,
                              kill_order = :kill_order
                        WHERE id = :id";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([
                 'location_id' => $this->locationId,
                 ':name' => $this->name,
@@ -154,7 +151,7 @@ class BossModel extends AbstractModel
     {
         if (!empty($this->locationId)) {
             $query = "SELECT name FROM Locations WHERE id = :id";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([':id' => $this->locationId]);
             if ($result) {
                 $this->locationName = $stmt->fetch()[0];

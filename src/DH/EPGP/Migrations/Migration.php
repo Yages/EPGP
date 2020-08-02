@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace DH\EPGP\Migrations;
@@ -6,7 +6,7 @@ namespace DH\EPGP\Migrations;
 
 
 use DateTimeImmutable;
-use DH\EPGP\Traits\DBAwareTrait;
+use DH\EPGP\Utilities\DB;
 use Exception;
 
 /**
@@ -16,10 +16,10 @@ use Exception;
  */
 abstract class Migration
 {
-    use DBAwareTrait;
-
     /** @var DateTimeImmutable  */
     private DateTimeImmutable $date;
+
+    protected DB $db;
 
     /**
      * Migration constructor.
@@ -28,27 +28,23 @@ abstract class Migration
     public function __construct()
     {
         $this->date = new DateTimeImmutable();
-        $this->connect();
+        $this->db = DB::getInstance();
     }
 
-    public function __destruct()
-    {
-        $this->disconnect();
-    }
 
     public function begin() : void
     {
-        $this->pdo()->beginTransaction();
+        $this->db->pdo()->beginTransaction();
     }
 
     public function finalise() : void
     {
-        $this->pdo()->commit();
+        $this->db->pdo()->commit();
     }
 
     public function rollback() : void
     {
-        $this->pdo()->rollBack();
+        $this->db->pdo()->rollBack();
     }
 
     abstract public function migrate();

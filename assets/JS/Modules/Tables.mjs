@@ -4,12 +4,18 @@ export function init() {
     initDatatable('guild-management');
     initDatatable('location-management');
     initDatatable('boss-management');
+    initDatatable('loot-management');
+    initDatatable('raid-management', {
+        "order": [[ 1, "desc" ]]
+    });
 }
 
-function initDatatable(id) {
+function initDatatable(id, options) {
     const table = $('#' + id);
     if (table.length > 0) {
-        table.DataTable();
+        if (typeof options === 'undefined') {
+            table.DataTable();
+        } else table.DataTable(options);
     }
 }
 

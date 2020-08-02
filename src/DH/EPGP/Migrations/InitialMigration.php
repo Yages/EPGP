@@ -19,7 +19,7 @@ class InitialMigration extends Migration
         $this->begin();
 
         // Create Admin Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS Administrators');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS Administrators');
         $query = "CREATE TABLE Administrators (
                       id INT(6) UNSIGNED AUTO_INCREMENT,
                       username VARCHAR(50) NOT NULL,
@@ -30,19 +30,19 @@ class InitialMigration extends Migration
                       PRIMARY KEY (id) 
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();
             die('Failed to create Admins Table');
         }
         $pass = password_hash('xelzenov', PASSWORD_DEFAULT);
-        $this->pdo()->exec("INSERT INTO Administrators (username, password, role, date_created, date_updated) VALUES ('xelzenov', '$pass', 3, NOW(), NOW())");
+        $this->db->pdo()->exec("INSERT INTO Administrators (username, password, role, date_created, date_updated) VALUES ('xelzenov', '$pass', 3, NOW(), NOW())");
         $pass = password_hash('carnifexus', PASSWORD_DEFAULT);
-        $this->pdo()->exec("INSERT INTO Administrators (username, password, role, date_created, date_updated) VALUES ('carnifexus', '$pass', 3, NOW(), NOW())");
+        $this->db->pdo()->exec("INSERT INTO Administrators (username, password, role, date_created, date_updated) VALUES ('carnifexus', '$pass', 3, NOW(), NOW())");
 
         // Create Guild Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS Guild');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS Guild');
         $query = "CREATE TABLE Guild (
                       id INT(6) UNSIGNED AUTO_INCREMENT,
                       name VARCHAR(32) NOT NULL,
@@ -50,7 +50,7 @@ class InitialMigration extends Migration
                       PRIMARY KEY (id)
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();
@@ -58,7 +58,7 @@ class InitialMigration extends Migration
         }
 
         // Create Character Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS Characters');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS Characters');
         $query = "CREATE TABLE Characters (
                       id INT(6) UNSIGNED AUTO_INCREMENT,
                       name VARCHAR(50) NOT NULL,
@@ -71,7 +71,7 @@ class InitialMigration extends Migration
                       PRIMARY KEY (id)
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();
@@ -79,7 +79,7 @@ class InitialMigration extends Migration
         }
 
         // Create Locations Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS Locations');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS Locations');
         $query = "CREATE TABLE Locations (
                       id INT(6) UNSIGNED AUTO_INCREMENT,
                       name VARCHAR(100) NOT NULL,
@@ -87,7 +87,7 @@ class InitialMigration extends Migration
                       PRIMARY KEY (id)
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();
@@ -95,7 +95,7 @@ class InitialMigration extends Migration
         }
 
         // Create Boss Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS Boss');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS Boss');
         $query = "CREATE TABLE Boss (
                       id INT(6) UNSIGNED AUTO_INCREMENT,
                       location_id INT(6) NOT NULL, 
@@ -105,7 +105,7 @@ class InitialMigration extends Migration
                       PRIMARY KEY (id)
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();
@@ -113,7 +113,7 @@ class InitialMigration extends Migration
         }
 
         // Create Raid Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS Raid');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS Raid');
         $query = "CREATE TABLE Raid(
                       id INT(6) UNSIGNED AUTO_INCREMENT,
                       location_id INT(6) NOT NULL,
@@ -122,7 +122,24 @@ class InitialMigration extends Migration
                       PRIMARY KEY (id)
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
+
+        if ($result === false) {
+            $this->rollback();
+            die('Failed to create Raid Table');
+        }
+
+        // Create RaidBoss Table
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS RaidBoss');
+        $query = "CREATE TABLE RaidBoss(
+                      id INT(6) UNSIGNED AUTO_INCREMENT,
+                      raid_id INT(6) NOT NULL,
+                      boss_id INT(6) NOT NULL,
+                      date TIMESTAMP NULL DEFAULT NULL, 
+                      PRIMARY KEY (id)
+                  )";
+
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();
@@ -130,7 +147,7 @@ class InitialMigration extends Migration
         }
 
         // Create RandomLoot Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS RandomLoot');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS RandomLoot');
         $query = "CREATE TABLE RandomLoot (
                       id INT(6) UNSIGNED AUTO_INCREMENT,
                       event_id INT(6) NOT NULL,
@@ -141,7 +158,7 @@ class InitialMigration extends Migration
                       PRIMARY KEY (id)
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();
@@ -149,7 +166,7 @@ class InitialMigration extends Migration
         }
 
         // Create RaidCharacter Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS RaidCharacter');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS RaidCharacter');
         $query = "CREATE TABLE RaidCharacter(
                       id INT(6) UNSIGNED AUTO_INCREMENT,
                       raid_id INT(6) NOT NULL,
@@ -159,7 +176,7 @@ class InitialMigration extends Migration
                       PRIMARY KEY (id)
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();
@@ -167,7 +184,7 @@ class InitialMigration extends Migration
         }
 
         // Create PointsRegister Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS PointsRegister');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS PointsRegister');
         $query = "CREATE TABLE PointsRegister(
                       id INT(6) UNSIGNED AUTO_INCREMENT,
                       event_id INT(6) NOT NULL,
@@ -180,7 +197,7 @@ class InitialMigration extends Migration
                       PRIMARY KEY (id)
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();
@@ -188,7 +205,7 @@ class InitialMigration extends Migration
         }
 
         // Create CharacterLoot Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS CharacterLoot');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS CharacterLoot');
         $query = "CREATE TABLE CharacterLoot(
                       id INT(6) UNSIGNED AUTO_INCREMENT,
                       event_id INT(6) NOT NULL,
@@ -202,7 +219,7 @@ class InitialMigration extends Migration
                       PRIMARY KEY (id)
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();
@@ -210,7 +227,7 @@ class InitialMigration extends Migration
         }
 
         // Create PointEvent Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS PointEvents');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS PointEvents');
         $query = "CREATE TABLE PointEvents(
                       id INT(6) UNSIGNED AUTO_INCREMENT,
                       event_type CHAR(1) NOT NULL,
@@ -221,7 +238,7 @@ class InitialMigration extends Migration
                       PRIMARY KEY (id)
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();
@@ -229,7 +246,7 @@ class InitialMigration extends Migration
         }
 
         // Create Loot Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS Loot');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS Loot');
         $query = "CREATE TABLE Loot(
                       id INT(6),
                       name VARCHAR(255) NOT NULL,
@@ -240,7 +257,7 @@ class InitialMigration extends Migration
                       PRIMARY KEY (id)
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();
@@ -248,7 +265,7 @@ class InitialMigration extends Migration
         }
 
         // Create BossLoot Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS BossLoot');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS BossLoot');
         $query = "CREATE TABLE BossLoot(
                       id INT(6) UNSIGNED AUTO_INCREMENT,
                       loot_id INT(6) NOT NULL,
@@ -256,7 +273,7 @@ class InitialMigration extends Migration
                       PRIMARY KEY (id)
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();
@@ -264,7 +281,7 @@ class InitialMigration extends Migration
         }
 
         // Create GearPoints Table
-        $this->pdo()->exec('DROP TABLE IF EXISTS GearPoints');
+        $this->db->pdo()->exec('DROP TABLE IF EXISTS GearPoints');
         $query = "CREATE TABLE GearPoints(
                       slot INT(6),
                       description VARCHAR(100) NOT NULL,
@@ -272,7 +289,7 @@ class InitialMigration extends Migration
                       PRIMARY KEY (slot)
                   )";
 
-        $result = $this->pdo()->exec($query);
+        $result = $this->db->pdo()->exec($query);
 
         if ($result === false) {
             $this->rollback();

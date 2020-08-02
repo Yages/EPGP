@@ -4,8 +4,6 @@
 namespace DH\EPGP\Models;
 
 
-use DH\EPGP\Traits\DBAwareTrait;
-
 /**
  * Class GuildModel
  * @package DH\EPGP\Models
@@ -13,8 +11,6 @@ use DH\EPGP\Traits\DBAwareTrait;
  */
 class GuildModel extends AbstractModel
 {
-    use DBAwareTrait;
-
     /** @var int */
     private int $id;
 
@@ -30,6 +26,7 @@ class GuildModel extends AbstractModel
      */
     public function __construct(?int $id = null)
     {
+        parent::__construct();
         if (!empty($id)) {
             $this->id = $id;
             $this->load();
@@ -47,7 +44,7 @@ class GuildModel extends AbstractModel
                     FROM Guild 
                    WHERE id = :id";
 
-        $stmt = $this->pdo()->prepare($query);
+        $stmt = $this->db->pdo()->prepare($query);
         $result = $stmt->execute([':id' => $this->id]);
 
         if (!$result) {
@@ -71,7 +68,7 @@ class GuildModel extends AbstractModel
         if (empty($this->id)) {
             $query = "INSERT INTO Guild (name, logo) 
                            VALUES (:name, :logo)";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([
                 ':name' => $this->name,
                 ':logo' => $this->logo,
@@ -82,7 +79,7 @@ class GuildModel extends AbstractModel
                          SET name = :name, 
                              logo = :logo
                        WHERE id = :id";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([
                 ':name' => $this->name,
                 ':logo' => $this->logo,

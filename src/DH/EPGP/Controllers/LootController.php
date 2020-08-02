@@ -25,25 +25,15 @@ class LootController extends Controller
      */
     public function list() : void
     {
-        $filterData = [];
         $view = new LootManagementView();
-        if (!empty($_POST['location-filter'])) {
-            $filterData['location'] = (int) $_POST['location-filter'];
-            $view->setLocationFilter($filterData['location']);
-        }
-        if (!empty($_POST['boss-filter'])) {
-            $filterData['boss'] = (int) $_POST['boss-filter'];
-            $view->setLocationFilter($filterData['boss']);
-        }
 
         $locationData = (new LocationRepository())->fetchAll();
         $bossData = (new BossRepository())->fetchAll();
-        $lootData = (new LootRepository())->fetchAll($filterData);
+        $lootData = (new LootRepository())->fetchAll();
 
         $view->setLocationData($locationData)
             ->setBossData($bossData)
-            ->setlootData($lootData);
-
-        $view->view();
+            ->setLootData($lootData)
+            ->view();
     }
 }

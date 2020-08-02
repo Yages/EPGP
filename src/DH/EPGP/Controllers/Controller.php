@@ -57,4 +57,38 @@ class Controller
         );
         $array = array_combine($keys, $values);
     }
+
+    /**
+     * @param string $method
+     * @param array $validationData
+     * @return array
+     */
+    protected function validate(string $method, array $validationData): array
+    {
+        $valid = true;
+        $messages = [];
+
+        if ($method === 'post') {
+            foreach ($validationData as $data) {
+                if (empty($_POST[$data['key']])) {
+                    error_log(${$method}[$data['key']]);
+                    $valid = false;
+                    $messages[] = $data['message'];
+                }
+            }
+        } else {
+            foreach ($validationData as $data) {
+                if (empty($_GET[$data['key']])) {
+                    error_log(${$method}[$data['key']]);
+                    $valid = false;
+                    $messages[] = $data['message'];
+                }
+            }
+        }
+
+        return [
+            'valid' => $valid,
+            'message' => implode(', ', $messages),
+        ];
+    }
 }

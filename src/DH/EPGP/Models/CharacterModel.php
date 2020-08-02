@@ -5,7 +5,6 @@ namespace DH\EPGP\Models;
 
 use DateTime;
 use DateTimeImmutable;
-use DH\EPGP\Traits\DBAwareTrait;
 use Exception;
 
 /**
@@ -15,8 +14,6 @@ use Exception;
  */
 class CharacterModel extends AbstractModel
 {
-    use DBAwareTrait;
-
     private int $id;
     private string $name;
     private string $class;
@@ -29,10 +26,11 @@ class CharacterModel extends AbstractModel
 
     /**
      * CharacterModel constructor.
-     * @param mixed|null $id
+     * @param string|int|null $id
      */
     public function __construct($id = null)
     {
+        parent::__construct();
         if (!empty($id)) {
             if (is_numeric($id)) {
                 $this->id = (int) $id;
@@ -66,11 +64,11 @@ class CharacterModel extends AbstractModel
         ";
         if (!empty($this->id)) {
             $query .= "WHERE c.id = :id";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([':id' => $this->id]);
         } else {
             $query .= "WHERE c.name = :name";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([':name' => $this->name]);
         }
 
@@ -110,7 +108,7 @@ class CharacterModel extends AbstractModel
         if (empty($this->id)) {
             $query = "INSERT INTO Characters (name, class, role, guild_id, active, date_created, date_updated)
                            VALUES (:name, :class, :role, :guildId, :active, NOW(), NOW())";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([
                 ':name' => $this->name,
                 ':class' => $this->class,
@@ -118,10 +116,10 @@ class CharacterModel extends AbstractModel
                 ':guildId' => $this->guildId,
                 ':active' => $active,
             ]);
-            $this->id = (int) $this->pdo()->lastInsertId();
+            $this->id = (int) $this->db->pdo()->lastInsertId();
 
             // get guild name
-            $this->guild = $this->pdo()->query("SELECT name FROM Guild WHERE id = {$this->getGuildId()}")->fetch()[0];
+            $this->guild = $this->db->pdo()->query("SELECT name FROM Guild WHERE id = {$this->getGuildId()}")->fetch()[0];
         } else {
             $query = "UPDATE Characters
                          SET name = :name,
@@ -131,7 +129,7 @@ class CharacterModel extends AbstractModel
                              active = :active,
                              date_updated = NOW()
                        WHERE id = :id";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
 
             $result = $stmt->execute([
                 ':name' => $this->name,

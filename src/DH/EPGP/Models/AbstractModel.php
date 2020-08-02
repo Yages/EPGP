@@ -3,6 +3,7 @@
 
 namespace DH\EPGP\Models;
 
+use DH\EPGP\Utilities\DB;
 use JsonSerializable;
 
 /**
@@ -12,6 +13,17 @@ use JsonSerializable;
  */
 abstract class AbstractModel implements JsonSerializable
 {
+    /** @var DB */
+    protected DB $db;
+
+    /**
+     * AbstractModel constructor.
+     */
+    public function __construct()
+    {
+        $this->db = DB::getInstance();
+    }
+
     abstract public function load() : bool;
 
     abstract public function save() : bool;

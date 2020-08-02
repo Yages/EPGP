@@ -3,8 +3,6 @@
 
 namespace DH\EPGP\Models;
 
-use DH\EPGP\Traits\DBAwareTrait;
-
 /**
  * Class LootModel
  * @package DH\EPGP\Models
@@ -12,14 +10,12 @@ use DH\EPGP\Traits\DBAwareTrait;
  */
 class LootModel extends AbstractModel
 {
-    use DBAwareTrait;
-
     /** Item Rarity constants */
     const ITEM_RARITY_LEGENDARY = 5;
     const ITEM_RARITY_EPIC = 4;
     const ITEM_RARITY_RARE = 3;
     const ITEM_RARITY_UNCOMMON = 2;
-    const ITEM_RARITY_COMMON =1;
+    const ITEM_RARITY_COMMON = 1;
 
     /** @var int|null */
     private int $id;
@@ -55,6 +51,7 @@ class LootModel extends AbstractModel
      */
     public function __construct(int $id)
     {
+        parent::__construct();
         $this->id = $id;
     }
 
@@ -237,7 +234,7 @@ class LootModel extends AbstractModel
                          INNER JOIN GearPoints g ON g.slot = l.slot
                    WHERE l.id = :id";
 
-        $stmt = $this->pdo()->prepare($query);
+        $stmt = $this->db->pdo()->prepare($query);
         $result = $stmt->execute([':id' => $this->id]);
 
         if (!$result) {
@@ -261,7 +258,7 @@ class LootModel extends AbstractModel
                          INNER JOIN BossLoot bl 
                          ON b.id = bl.boss_id
                    WHERE bl.loot_id = :id";
-        $stmt = $this->pdo()->prepare($query);
+        $stmt = $this->db->pdo()->prepare($query);
         $result = $stmt->execute([':id' => $this->id]);
 
         if (!$result) {
@@ -306,7 +303,7 @@ class LootModel extends AbstractModel
                                :slot, 
                                :item_level, 
                                :rarity)";
-        $stmt = $this->pdo()->prepare($query);
+        $stmt = $this->db->pdo()->prepare($query);
         $result = $stmt->execute([
             ':id' => $this->id,
             ':name' => $this->name,
@@ -354,7 +351,7 @@ class LootModel extends AbstractModel
     {
         if (!empty($this->locationId)) {
             $query = "SELECT name FROM Locations WHERE id = :id";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([':id' => $this->locationId]);
             if ($result) {
                 $this->locationName = $stmt->fetch()[0];
@@ -370,7 +367,7 @@ class LootModel extends AbstractModel
     {
         if (!empty($this->slotId)) {
             $query = "SELECT description FROM GearPoints WHERE slot = :slot";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $result = $stmt->execute([':slot' => $this->slotId]);
             if ($result) {
                 $this->slotName = $stmt->fetch()[0];
@@ -387,7 +384,7 @@ class LootModel extends AbstractModel
             $this->clearBossData();
             $query = "INSERT INTO BossLoot (loot_id, boss_id)
                            VALUES (:loot_id, :boss_id)";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
 
             foreach ($this->bosses as $boss) {
                 $stmt->execute([
@@ -406,7 +403,7 @@ class LootModel extends AbstractModel
         if ($this->id) {
             $query = "DELETE FROM BossLoot
                             WHERE loot_id = :id";
-            $stmt = $this->pdo()->prepare($query);
+            $stmt = $this->db->pdo()->prepare($query);
             $stmt->execute([':id' => $this->id]);
         }
     }
@@ -421,7 +418,7 @@ class LootModel extends AbstractModel
         $query = "SELECT COUNT(*) 
                     FROM Loot 
                    WHERE id = :id";
-        $stmt = $this->pdo()->prepare($query);
+        $stmt = $this->db->pdo()->prepare($query);
         $stmt->execute([':id' => $lootId]);
         $count = (int) $stmt->fetch()[0];
         return ($count === 0);

@@ -13,28 +13,69 @@ use DH\EPGP\Models\LootModel;
 class LootRepository extends Repository
 {
     /**
-     * @param array|null $filters
      * @return array
      */
-    public function fetchAll(?array $filters): array
+    public function fetchAll(): array
     {
         $loot = [];
         $params = [];
 
         $query = "SELECT id 
-                    FROM Loot
-                   WHERE 1=1";
-        if (array_key_exists('location', $filters)) {
-            $query .= " AND location_id = :location";
-            $params[':location'] = $filters['location'];
-        }
-        if (array_key_exists('boss', $filters)) {
-            $query .= " AND boss_id = :boss";
-            $params[':boss'] = $filters['boss'];
+                    FROM Loot";
+
+        $stmt = $this->db->pdo()->query($query);
+        $ids = $stmt->fetchAll();
+
+        foreach ($ids as $row) {
+            $item = new LootModel((int) $row['id']);
+            $item->load();
+            $loot[] = $item;
         }
 
+        return $loot;
+    }
+
+    /**
+     * Returns all loot for the specified boss.
+     * @param int $bossId
+     * @return array
+     */
+    public function fetchByBoss(int $bossId) : array
+    {
+        $loot = [];
+
+        $query = "SELECT id 
+                    FROM Loot
+                   WHERE boss_id = :boss";
+
         $stmt = $this->db->pdo()->prepare($query);
-        $stmt->execute($params);
+        $stmt->execute([':boss' => $bossId]);
+        $ids = $stmt->fetchAll();
+
+        foreach ($ids as $row) {
+            $item = new LootModel((int) $row['id']);
+            $item->load();
+            $loot[] = $item;
+        }
+
+        return $loot;
+    }
+
+    /**
+     * Returns all loot for the specified location.
+     * @param int $locationId
+     * @return array
+     */
+    public function fetchByLocation(int $locationId) : array
+    {
+        $loot = [];
+
+        $query = "SELECT id 
+                    FROM Loot
+                   WHERE location_id = :location";
+
+        $stmt = $this->db->pdo()->prepare($query);
+        $stmt->execute([':location' => $locationId]);
         $ids = $stmt->fetchAll();
 
         foreach ($ids as $row) {

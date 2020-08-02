@@ -1,0 +1,87 @@
+{% extends "main.twig" %}
+
+{% block title %}Raid Management{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1><i class="fas fa-dungeon"></i> Raid Management</h1>
+    </div>
+    <div class="row">
+        <div class="col my-4">
+            <form class="form-inline">
+                {% if user.isAdmin or user.isLooter %}
+                <div class="form-group mx-2">
+                    <button id="create-raid" type="button" role="button" class="btn btn-outline-primary"><i class="fas fa-plus"></i> Create New Raid</button>
+                </div>
+                {% endif %}
+                <div class="form-group mx-2">
+                    <label class="sr-only" for="location-filter">Filter By Location</label>
+                    <select id="location-filter-raids" class="form-control">
+                        <option value="" selected>All Locations</option>
+                        {% for location in locations %}
+                            <option value="{{ location.name }}">{{ location.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    <table id="raid-management" class="table table-striped text-light" style="width:100%;">
+        <thead class="text-dark bg-light">
+        <tr>
+            <th>Raid ID</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for raid in raids %}
+            <tr>
+                <td>{{ raid.getId }}</td>
+                <td>{{ raid.getDate }}</td>
+                <td>{{ raid.getLocationName}}</td>
+                <td>
+                    {% if user.isAdmin or user.isLooter  %}
+                        {% if not raid.isFinalised %}
+                            <button data-id="{{ raid.getId }}" type="button" data-toggle="tooltip" title="Continue Raid" class="btn btn-sm btn-outline-primary edit-raid"><i class="far fa-edit"></i></button>
+                        {% else %}
+                            <button data-id="{{ raid.getId }}" type="button" data-toggle="tooltip" title="View Details" class="btn btn-sm btn-outline-primary view-raid"><i class="fas fa-search-plus"></i></button>
+                        {% endif %}
+                    {% else %}
+                        <button data-id="{{ raid.getId }}" type="button" data-toggle="tooltip" title="View Details" class="btn btn-sm btn-outline-primary view-raid"><i class="fas fa-search-plus"></i></button>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="modal fade" id="raid-add-modal" tabindex="-1" role="dialog" aria-labelledby="raid-add-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title" id="raid-add-modal-label">Create Raid</h5>
+                    <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-dark">
+                    <form id="raid-form">
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <select name="location" id="location" class="form-control">
+                                {% for location in locations %}
+                                    <option data-bosses="{{ location.bossCount }}" value="{{ location.id }}">{{ location.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-dark">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button id="save-raid" type="button" class="btn btn-success">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

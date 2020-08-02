@@ -42,7 +42,8 @@ class LocationController extends Controller
                 'success' => false,
                 'message' => 'You must include a valid location Name',
             ]);
-        } if (empty($locationData['boss-count'])) {
+        }
+        if (empty($locationData['boss-count'])) {
             $this->toJson([
                 'success' => false,
                 'message' => 'You must include a valid number of Boss Encounters',

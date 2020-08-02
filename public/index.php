@@ -8,6 +8,7 @@ use DH\EPGP\Controllers\CharacterController;
 use DH\EPGP\Controllers\GuildController;
 use DH\EPGP\Controllers\LocationController;
 use DH\EPGP\Controllers\LootController;
+use DH\EPGP\Controllers\RaidController;
 use DH\EPGP\Controllers\TotalsController;
 use DH\EPGP\Utilities\Router;
 
@@ -81,6 +82,19 @@ if ($authController->checkSession()) {
     $lootController = new LootController();
     $router->get('/loot', function () use ($lootController) {
         $lootController->list();
+    });
+
+    // Raid Stuff
+    $raidController = new RaidController();
+    $router->get('/raids', function() use ($raidController) {
+        $raidController->list();
+    })->get('/raids/detail', function() use ($raidController) {
+        $raidController->show();
+    });
+    $router->post('/raids/create', function() use ($raidController) {
+        $raidController->create();
+    })->post('/raids/boss/update', function() use ($raidController) {
+        $raidController->updateBoss();
     });
 
 } else {

@@ -1,0 +1,83 @@
+{% extends "main.twig" %}
+
+{% block title %}Raid &num;{{ raid.getId }} Detail{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-dungeon"></i> Raid &num;{{ raid.getId }} Detail -
+            {% if raid.isFinalised %}
+                <span class="text-success">Completed</span>
+            {% else %}
+                <span class="text-danger">Active</span>
+            {% endif %}
+        </h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-3">
+            <div class="detail-panel">
+                <div class="detail-row"><h4>Raid Details</h4></div>
+                <div class="detail-row">
+                    <span class="detail-label">Location</span>
+                    <span>{{ raid.getLocationName }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date</span>
+                    <span>{{ raid.getDate }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status</span>
+                    <span>
+                        {% if raid.isFinalised %}
+                            <span class="text-success">Completed</span>
+                        {% else %}
+                            <span class="text-danger">Active</span>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <div id="boss-detail" class="detail-panel">
+                <div class="detail-row">
+                    <h4>Boss Encounters</h4>
+                </div>
+                {% for boss in raid.getBosses %}
+                    <div id="raid-boss-{{ boss.getBoss.getId }}" class="detail-row">
+                        <span class="boss-detail-row {% if boss.getStatus == 0 %}text-success{% endif %}" data-name="{{ boss.getBoss.getName }}" data-order="{{ boss.getBoss.getKillOrder }}">
+                            {% if boss.getStatus == 0 %}<del>{% endif %}
+                                &num;{{ boss.getBoss.getKillOrder }} &ndash; {{ boss.getBoss.getName }}
+                            {% if boss.getStatus == 0 %}</del>{% endif %}
+                        </span>
+                        <span class="boss-detail-row-actions">
+                            {% if boss.getStatus == 1 %}
+                                <button type="button" data-raid="{{ raid.getId }}" data-action="mark-kill" data-boss="{{ boss.getBoss.getId }}" class="btn btn-outline-success boss-action" data-tooltip="Mark as Killed">
+                                    <i class="fas fa-skull"></i>
+                                </button>
+                            {% else %}
+                                <button type="button" data-raid="{{ raid.getId }}" data-action="mark-alive" data-boss="{{ boss.getBoss.getId }}" class="btn btn-sm btn-outline-danger boss-action" data-tooltip="Mark as Alive">
+                                    <span class="fa-stack">
+                                        <i class="fas fa-ban fa-stack-2x"></i>
+                                        <i class="fas fa-skull fa-stack-1x"></i>
+                                    </span>
+                                </button>
+                            {% endif %}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-4">
+            <div id="character-roster" class="detail-panel">
+                <div class="detail-row">
+                    <h4>Character Roster</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-5">
+            <div id="loot-log" class="detail-panel">
+                <div class="detail-row">
+                    <h4>Loot Log</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
